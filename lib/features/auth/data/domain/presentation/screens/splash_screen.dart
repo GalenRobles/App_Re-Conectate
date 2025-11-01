@@ -76,7 +76,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               // 1. Tu logo (sin cambios)
               Image.asset(
                 'assets/images/logo.png',
-                height: 120,
+                height: 130,
               ),
               const SizedBox(height: 24),
 

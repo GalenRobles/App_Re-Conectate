@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   // y declararla en pubspec.yaml
                   Image.asset(
                     'assets/images/logo.png', // Ajusta esta ruta
-                    height: 100, // Ajusta el tamaño
+                    height: 120, // Ajusta el tamaño
                   ),
                   const SizedBox(height: 20),
 
