@@ -9,6 +9,11 @@ import 'package:reconectate/app/shell/main_navigation_shell.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 
+// ruta temporal
+//import '../../features/profile/prasentation/screens/Perfil.dart';
+
+
+
 // 3. El Provider de Riverpod que "provee" el router a la app
 final appRouterProvider = Provider<GoRouter>((ref) {
 
