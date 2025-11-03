@@ -38,6 +38,7 @@ dependencies:
 
   # --- B) DEPENDENCIAS POR DEFECTO ---
   cupertino_icons: ^1.0.8
+  equatable: ^2.0.7
 
 #
 # --- DEPENDENCIAS DE DESARROLLO ---
