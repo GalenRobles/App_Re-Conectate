@@ -10,10 +10,8 @@ import 'package:reconectate/features/auth/data/domain/presentation/screens/splas
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
 import 'package:reconectate/features/profile/presentation/screens/Codigo_ver.dart';
-
-
-// ruta temporal
-//import '../../features/profile/presentation/screens/Perfil.dart';
+import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
+import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 
 
 
@@ -50,8 +48,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/verific',
         name: 'Codigo_ver',
         builder: (context, state) => const VerificationApp(),
-
-
+      ),
+      GoRoute(path: '/editarPerfil',
+        name: 'ActualizarUsuario',
+        builder: (context,state) => const editarPerfil(),
+      ),
+      GoRoute(path: '/perfil',
+      name: 'perfil',
+      builder: (context,state)=> const Perfil(),
       )
 
     ],
