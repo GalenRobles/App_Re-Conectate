@@ -9,11 +9,11 @@ import 'package:reconectate/app/shell/main_navigation_shell.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
-import 'package:reconectate/features/profile/prasentation/screens/Codigo_ver.dart';
+import 'package:reconectate/features/profile/presentation/screens/Codigo_ver.dart';
 
 
 // ruta temporal
-//import '../../features/profile/prasentation/screens/Perfil.dart';
+//import '../../features/profile/presentation/screens/Perfil.dart';
 
 
 
