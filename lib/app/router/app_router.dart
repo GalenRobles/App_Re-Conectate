@@ -8,6 +8,9 @@ import 'package:reconectate/app/shell/main_navigation_shell.dart';
 // 2. Importa TODAS las pantallas que definimos
 import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
+import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
+import 'package:reconectate/features/profile/presentation/screens/Codigo_ver.dart';
+
 
 // ruta temporal
 //import '../../features/profile/prasentation/screens/Perfil.dart';
@@ -37,6 +40,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
 
+      GoRoute(
+          path: '/registre',
+        name: 'Crear_cuenta',
+        builder: (context, state) => const RegistrationApp(),
+
+      ),
+      GoRoute(
+        path: '/verific',
+        name: 'Codigo_ver',
+        builder: (context, state) => const VerificationApp(),
+
+
+      )
 
     ],
   );
