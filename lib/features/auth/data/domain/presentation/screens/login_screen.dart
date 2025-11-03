@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -113,13 +115,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("¿No tienes cuenta?", style: textTheme.bodySmall),
+                //button
                       TextButton(
                         child: const Text('Regístrate'),
                         onPressed: () {
-                          // TODO: Navegar a la pantalla de registro
-                          // Ejemplo con go_router: context.push('/register');
+                          // Usando el nuevo path
+                          context.push('/registre');
                         },
                       ),
+                          // Ejemplo con go_router: context.push('/register');
+
+
                     ],
                   ),
                 ],

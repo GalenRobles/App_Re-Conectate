@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   runApp(const RegistrationApp());
@@ -53,10 +54,10 @@ class RegistrationScreen extends StatelessWidget {
                 ),
                 child: Center(
                   // Usamos un icono genérico para simular la ilustración sin tener el archivo
-                  child: Icon(
-                    Icons.person_pin_circle_rounded,
-                    size: 130,
-                    color: primaryColor.withOpacity(0.8),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    height: 120, // Ajusta el tamaño
+
                   ),
                 ),
               ),
@@ -110,8 +111,19 @@ class RegistrationScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  // 💡 Aquí cambiamos el `debugPrint` por la navegación.
                   onPressed: () {
-                    debugPrint('Continuar registro...');
+                    // Importa 'package:go_router/go_router.dart'
+                    // Usa context.go() para navegar a la siguiente ruta.
+                    // Esto reemplaza la pila de navegación, ideal para avanzar en un flujo.
+                    context.push('/verific');
+
+                    // Alternativamente, puedes usar:
+                    // context.push('/registro_completo');
+                    // Si quieres mantener la pantalla actual en la pila para poder volver.
+
+                    // Si usas rutas con nombre:
+                    // context.goNamed('registroCompletoRouteName');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor, // Fondo rojo
