@@ -10,7 +10,6 @@ class FirestoreService {
     // TODO: Implementar lógica de escritura de datos (Tarea de Lira/Picazo para mañana).
     return Future.value();
   }
-
   // [LLAMADO POR EDWIN]
   // Función que lee los datos del perfil para mostrarlos en Editar Perfil.
   Future<Map<String, dynamic>?> getUserProfile(String userId) async {
