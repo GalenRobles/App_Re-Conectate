@@ -14,9 +14,7 @@ void main() async {
   // 4. Inicializa Firebase
   // Debes descomentar la línea de 'firebase_options.dart' si
   // ya configuraste Firebase en tu proyecto.
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  await Firebase.initializeApp();
 
   // 5. ¡EL PASO CLAVE DE RIVERPOD!
   // Envolvemos toda la app en un 'ProviderScope'.
