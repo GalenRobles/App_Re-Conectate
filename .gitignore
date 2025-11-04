@@ -43,3 +43,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+# ----------------------------------------
+# EXCLUSIONES DE FIREBASE Y SECRETOS
+# ----------------------------------------
+
+# Archivos de configuración de servicio de Firebase (Contienen claves API privadas)
+# Android:
+/android/app/google-services.json
+
+# iOS/macOS:
+/ios/Runner/GoogleService-Info.plist
+/macos/Runner/GoogleService-Info.plist
+
+# Credenciales de Gradle (Contiene rutas a Keystores, etc.)
+/android/key.properties
