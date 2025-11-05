@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 // Asegúrate de que esta ruta sea correcta para tu AuthStateManager
-import '../managers/auth_state_manager.dart';
+import 'package:reconectate/managers/AuthStateManager.dart';
 
 // ----------------------------------------------------------------------
 // 1. EL NOTIFIER (Manejador de Lógica y Estado de Carga)
