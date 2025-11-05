@@ -13,7 +13,12 @@ class FirestoreService {
     required String apellido, // <--- AÑADIDO: Para recibir el dato del formulario
   }) async {
     // 💡 Tarea de Edwin: Implementar el código que usa estos 4 parámetros
-    return Future.value();
+    await _db.collection('users').doc(userId).set({
+      'nombre': nombre,
+      'apellido': apellido,
+      'email': email,
+      'createdAt': FieldValue.serverTimestamp(), // Opcional, pero buena práctica
+    });
   }
   // [LLAMADO POR EDWIN]
   // Función que lee los datos del perfil para mostrarlos en Editar Perfil.
