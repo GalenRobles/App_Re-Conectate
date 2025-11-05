@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/managers/AuthStateManager.dart';
 // Asegúrate de que esta ruta sea correcta para tu AuthNotifier
 import 'auth_login_notifier.dart';
-
-
 // ----------------------------------------------------------------------
 // 1. PROVIDERS BÁSICOS (Tú ya los tenías)
 // ----------------------------------------------------------------------
