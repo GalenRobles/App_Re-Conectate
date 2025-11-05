@@ -1,13 +1,171 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+// Asegúrate de que las rutas a tus CustomWidgets sean correctas
+import 'package:reconectate/core/widgets/custom_button.dart';
+import 'package:reconectate/core/widgets/custom_text_field.dart';
 
-class RegisterScreen extends ConsumerWidget {
+// Importa los servicios clave que usará Lira
+import 'package:reconectate/providers/auth_login_notifier.dart'; // Para signUpWithEmail
+import 'package:reconectate/providers/auth_providers.dart';
+import 'package:reconectate/services/FirestoreService.dart';
+
+
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(
-      body: Center(child: Text('Register Screen')),
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  // 1. Controladores para los 4 campos
+  final _nameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // -------------------------------------------------------------------
+  // LÓGICA CLAVE: Manejar el Registro (Auth + Firestore)
+  // -------------------------------------------------------------------
+  void _handleRegistration() async {
+    // 1. Validar el formulario
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    // 2. Obtener los Notifiers y Servicios
+    final authNotifier = ref.read(authNotifierProvider.notifier);
+    final firestoreService = ref.read(firestoreServiceProvider); // Servicio de Edwin
+
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text;
+    final String nombre = _nameController.text.trim();
+    final String apellido = _lastNameController.text.trim();
+
+    try {
+      // 3. PASO 1: REGISTRO en Firebase Auth (Lógica de Picazo)
+      final userCredential = await authNotifier.signUpWithEmail(
+        email: email,
+        password: password,
+      );
+
+      // 4. PASO 2: CREACIÓN de Perfil en Firestore (Lógica de Edwin)
+      // Se llama justo después de que el registro de Auth fue exitoso
+      await firestoreService.createUserProfile(
+        userId: userCredential.user!.uid, // CLAVE: ID del usuario recién creado
+        email: email,
+        nombre: nombre,
+        apellido: apellido,
+      );
+
+      // 5. ÉXITO: El AuthGate detecta el usuario logueado y navega automáticamente a Home.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('¡Registro exitoso! Redirigiendo...')),
+      );
+
+    } on Exception catch (e) {
+      // Manejar y mostrar errores
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al registrar: $e')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Escucha el estado de carga para deshabilitar botones
+    final isLoading = ref.watch(authNotifierProvider);
+    final textTheme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 40),
+
+                  // Título
+                  Text(
+                    '¡Crea tu Cuenta!',
+                    textAlign: TextAlign.center,
+                    style: textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 30),
+
+                  // --- CAMPOS DE REGISTRO ---
+                  CustomTextField(
+                    controller: _nameController,
+                    hintText: 'Nombre(s)',
+                    keyboardType: TextInputType.text,
+                    validator: (v) => v!.isEmpty ? 'Ingresa tu nombre' : null,
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextField(
+                    controller: _lastNameController,
+                    hintText: 'Apellido(s)',
+                    keyboardType: TextInputType.text,
+                    validator: (v) => v!.isEmpty ? 'Ingresa tu apellido' : null,
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextField(
+                    controller: _emailController,
+                    hintText: 'Correo Electrónico',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (v) => v!.isEmpty ? 'Ingresa tu correo' : null,
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextField(
+                    controller: _passwordController,
+                    hintText: 'Contraseña (mín. 6 caracteres)',
+                    obscureText: true,
+                    validator: (v) => v!.length < 6 ? 'Contraseña muy corta' : null,
+                  ),
+                  const SizedBox(height: 40),
+
+                  // 4. Botón de Registro
+                  CustomButton(
+                    text: isLoading ? 'Registrando...' : 'Registrarme',
+                    onPressed: isLoading ? null : _handleRegistration,
+                  ),
+                  const SizedBox(height: 30),
+
+                  // 5. Botón para ir a Login
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("¿Ya tienes cuenta?", style: textTheme.bodySmall),
+                      TextButton(
+                        child: const Text('Inicia Sesión'),
+                        onPressed: () {
+                          context.go('/login'); // Usa go para limpiar el historial
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

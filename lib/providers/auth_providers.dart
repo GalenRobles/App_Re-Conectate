@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/managers/AuthStateManager.dart';
 // Asegúrate de que esta ruta sea correcta para tu AuthNotifier
 import 'auth_login_notifier.dart';
+import 'package:reconectate/services/FirestoreService.dart';
 // ----------------------------------------------------------------------
 // 1. PROVIDERS BÁSICOS (Tú ya los tenías)
 // ----------------------------------------------------------------------
@@ -25,6 +26,10 @@ final signOutProvider = Provider<Future<void> Function()>(
     return authManager.signOut;
   },
 );
+final firestoreServiceProvider = Provider<FirestoreService>((ref) {
+  // Asume que la clase FirestoreService tiene un constructor por defecto
+  return FirestoreService();
+});
 
 // ----------------------------------------------------------------------
 // 2. PROVIDER DEL NOTIFIER (NUEVO - Para Login y Registro)

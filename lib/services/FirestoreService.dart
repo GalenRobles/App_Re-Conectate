@@ -6,8 +6,13 @@ class FirestoreService {
 
   // [LLAMADO POR LIRA]
   // Función que crea el documento inicial del perfil al registrarse un usuario.
-  Future<void> createUserProfile(String userId, String email) async {
-    // TODO: Implementar lógica de escritura de datos (Tarea de Lira/Picazo para mañana).
+  Future<void> createUserProfile({ // <--- CAMBIO: Usamos Named Parameters
+    required String userId,
+    required String email,
+    required String nombre, // <--- AÑADIDO: Para recibir el dato del formulario
+    required String apellido, // <--- AÑADIDO: Para recibir el dato del formulario
+  }) async {
+    // 💡 Tarea de Edwin: Implementar el código que usa estos 4 parámetros
     return Future.value();
   }
   // [LLAMADO POR EDWIN]
@@ -23,4 +28,6 @@ class FirestoreService {
     // Tarea de Edwin: Implementar lógica de actualización (update()).
     return Future.value();
   }
+
+
 }
