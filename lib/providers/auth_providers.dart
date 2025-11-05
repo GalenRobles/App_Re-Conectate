@@ -8,7 +8,7 @@ import 'auth_login_notifier.dart';
 // ----------------------------------------------------------------------
 // 1. PROVIDERS BÁSICOS (Tú ya los tenías)
 // ----------------------------------------------------------------------
-
+//cambios
 // 1.1. Provider del Manager: Provee la instancia de AuthStateManager
 final authStateManagerProvider = Provider<AuthStateManager>((ref) {
   return AuthStateManager();

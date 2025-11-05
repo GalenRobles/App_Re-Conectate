@@ -8,6 +8,7 @@ import '../providers/auth_providers.dart'; // ¡Importante!
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
+  //cambio
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

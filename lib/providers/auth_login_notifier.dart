@@ -73,7 +73,7 @@ class AuthNotifier extends StateNotifier<bool> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-
+// ksksks
       await _auth.signInWithCredential(credential);
 
     } on FirebaseAuthException {
