@@ -22,8 +22,16 @@ class FirestoreService {
   // [LLAMADO POR EDWIN]
   // Función que lee los datos del perfil para mostrarlos en Editar Perfil.
   Future<Map<String, dynamic>?> getUserProfile(String userId) async {
-    // Tarea de Edwin: Implementar lógica de lectura (get()).
-    return null;
+    final docSnapshot = await _db.collection('users').doc(userId).get();
+
+    // 2. Verificar si el documento existe
+    if (docSnapshot.exists) {
+      // 3. Devolver los datos como un mapa
+      return docSnapshot.data();
+    } else {
+      // El perfil no existe (error en el flujo de registro)
+      return null;
+    }
   }
 
   // [LLAMADO POR EDWIN]

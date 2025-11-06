@@ -114,7 +114,7 @@ class Perfil extends StatelessWidget {
 
             const Spacer(),
 
-            // 🔧 Botón "Cerrar Sesión" corregido
+            // 🔧 Botón "Cerrar Sesión"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: ElevatedButton(
