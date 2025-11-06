@@ -13,7 +13,7 @@ import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 // ¡IMPORTA EL AUTHGATE Y EL HOME!
 import 'package:reconectate/navigation/auth_gate.dart';
 import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
-
+import 'package:reconectate/features/auth/data/domain/presentation/screens/forgot_password_screen.dart';
 
 // 3. El Provider de Riverpod (sin cambios)
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -40,19 +40,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'login',
         builder: (context, state) => const LoginScreen(),
       ),
+      GoRoute(
+        path: '/forgotPassword',
+        name: 'Recuperar_contra',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
 
       GoRoute(
         path: '/registre',
         name: 'Crear_cuenta',
-        // ¡LA CORRECCIÓN CRÍTICA!
-        // Apunta al widget correcto: RegisterScreen
         builder: (context, state) => const RegisterScreen(),
 
       ),
       GoRoute(
         path: '/verific',
         name: 'Codigo_ver',
-        builder: (context, state) => const VerificationScreen(), // Corregido el nombre del widget
+        builder: (context, state) => const VerificationScreen(),
       ),
       GoRoute(path: '/editarPerfil',
         name: 'ActualizarUsuario',
@@ -63,7 +66,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context,state)=> const Perfil(),
       ),
 
-      // ¡NUEVO! Ruta para el Home (necesaria para el AuthGate)
       GoRoute(
         path: '/home',
         name: 'home',

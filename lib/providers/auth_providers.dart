@@ -39,3 +39,13 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, bool>((ref) {
   return AuthNotifier();
 });
+// 4. PROVIDER PARA RECUPERACIÓN DE CONTRASEÑA (Para la nueva UI)
+final passwordResetProvider = Provider<Future<void> Function({required String email})>(
+      (ref) {
+    // Obtiene el Notifier para poder llamar a la función de Firebase
+    final authNotifier = ref.read(authNotifierProvider.notifier);
+
+    // Retorna una función que encapsula la llamada al servicio
+    return ({required String email}) => authNotifier.sendPasswordResetEmail(email: email);
+  },
+);

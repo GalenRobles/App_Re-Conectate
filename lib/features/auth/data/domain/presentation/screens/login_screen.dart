@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart'; // NECESARIO para el botón de Google
+
+// Importa los servicios clave
+import 'package:reconectate/providers/auth_login_notifier.dart';
+import 'package:reconectate/providers/auth_providers.dart';
 
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -14,11 +19,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  // Es una buena práctica usar controladores para los campos de texto
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Y un GlobalKey para el formulario si vas a usar validación
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -28,15 +30,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  // -------------------------------------------------------------------
+  // LÓGICA DE LOGIN CON EMAIL/PASS (COMPLETA)
+  // -------------------------------------------------------------------
+  void _loginWithEmail() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final notifier = ref.read(authNotifierProvider.notifier);
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    try {
+      await notifier.signInWithEmail(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      String message = 'Error de Login.';
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        message = 'Correo o contraseña incorrectos.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error inesperado: $e')),
+      );
+    }
+  }
+
+  // -------------------------------------------------------------------
+  // LÓGICA DE LOGIN CON GOOGLE (Placeholder para Lira/Edwin)
+  // -------------------------------------------------------------------
+  void _loginWithGooglePlaceholder() {
+    // Tarea reasignada a Lira/Edwin: Implementar la llamada a authNotifier.signInWithGoogle()
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Función de Google pendiente por implementar.')),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    // Observa el estado de carga para deshabilitar botones
+    final isLoading = ref.watch(authNotifierProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          // Usamos SingleChildScrollView para evitar que el teclado tape los campos
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -46,35 +89,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   const SizedBox(height: 60),
 
-                  // 1. Logo de la Matrioska (¡Añadido!)
-                  // Debes agregar tu imagen en una carpeta 'assets/images/'
-                  // y declararla en pubspec.yaml
+                  // 1. Logo
                   Image.asset(
-                    'assets/images/logo.png', // Ajusta esta ruta
-                    height: 120, // Ajusta el tamaño
+                    'assets/images/logo.png',
+                    height: 120,
                   ),
                   const SizedBox(height: 20),
 
-                  // 2. Títulos (como los tenías)
+                  // 2. Títulos
                   Text(
                     'RE-CONECTATE',
                     textAlign: TextAlign.center,
-                    style: textTheme.headlineMedium, // Usando tu tema
+                    style: textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Ingresa tus datos para iniciar sesión',
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall, // Usando tu tema
+                    style: textTheme.bodySmall,
                   ),
                   const SizedBox(height: 40),
 
-                  // 3. Campos de texto (usando nuestro widget)
+                  // 3. Campos de texto
                   CustomTextField(
                     controller: _emailController,
                     hintText: 'Ingresa tu correo',
                     keyboardType: TextInputType.emailAddress,
-                    // TODO: Añadir validación desde core/utils/validators.dart
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
@@ -82,14 +122,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     hintText: 'Contraseña',
                     obscureText: true,
                   ),
-                  const SizedBox(height: 40),
 
-                  // 4. Botón de Ingresar (como lo tenías)
+                  // --- ENLACE DE RECUPERACIÓN DE CONTRASEÑA ---
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      child: const Text('¿Olvidaste la contraseña?'),
+                      onPressed: () {
+                        context.push('/forgotPassword');
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // 4. Botón de Ingresar
                   CustomButton(
-                    text: 'Ingresar', // Tu diseño usa 'Ingresar'
-                    onPressed: () {
-                      // TODO: Aquí va la lógica de login con Riverpod
-                    },
+                    text: isLoading ? 'Cargando...' : 'Ingresar',
+                    onPressed: isLoading ? null : _loginWithEmail, // Conectado a la lógica
                   ),
                   const SizedBox(height: 30),
 
@@ -100,32 +150,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: textTheme.bodySmall,
                   ),
                   const SizedBox(height: 20),
+
+                  // --- BOTÓN DE GOOGLE (Restaurado) ---
                   SignInButton(
                     Buttons.Google,
-                    text: "Continuar con Google",
-                    onPressed: () {
-                      // TODO: Aquí va la lógica de google_sign_in
-                    },
+                    text: isLoading ? 'Cargando...' : "Continuar con Google",
+                    // Asignamos el placeholder. Lira/Edwin lo implementarán.
+                    onPressed: isLoading ? null : _loginWithGooglePlaceholder,
                   ),
+                  // -------------------------------------
+
                   const SizedBox(height: 20),
 
-                  // 6. Botón para ir a Registro (¡Muy importante!)
-                  // Tu diseño no lo muestra, pero es fundamental para el flujo.
+                  // 6. Botón para ir a Registro
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("¿No tienes cuenta?", style: textTheme.bodySmall),
-                //button
                       TextButton(
                         child: const Text('Regístrate'),
                         onPressed: () {
-                          // Usando el nuevo path
                           context.push('/registre');
                         },
                       ),
-                          // Ejemplo con go_router: context.push('/register');
-
-
                     ],
                   ),
                 ],
