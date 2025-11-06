@@ -12,7 +12,6 @@ class FirestoreService {
     required String nombre, // <--- AÑADIDO: Para recibir el dato del formulario
     required String apellido, // <--- AÑADIDO: Para recibir el dato del formulario
   }) async {
-    // 💡 Tarea de Edwin: Implementar el código que usa estos 4 parámetros
     await _db.collection('users').doc(userId).set({
       'nombre': nombre,
       'apellido': apellido,
