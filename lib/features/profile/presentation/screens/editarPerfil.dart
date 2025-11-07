@@ -1,19 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reconectate/services/FirestoreService.dart';
 
-class editarPerfil extends StatelessWidget {
-  const editarPerfil({super.key});
+
+class EditarPerfil extends StatefulWidget {
+  const EditarPerfil({super.key});
+
+  @override
+  State<EditarPerfil> createState() => _EditarPerfilState();
+}
+
+class _EditarPerfilState extends State<EditarPerfil> {
+  final _auth = FirebaseAuth.instance;
+  final _firestoreService = FirestoreService();
+
+  final nameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final data = await _firestoreService.getUserProfile(user.uid);
+      if (data != null) {
+        nameController.text = data['nombre'] ?? '';
+        lastNameController.text = data['apellido'] ?? '';
+        emailController.text = data['email'] ?? '';
+      }
+    }
+    setState(() => isLoading = false);
+  }
+
+  Future<void> _saveChanges() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    await _firestoreService.updateUserProfile(
+      user.uid,
+      {
+        'nombre': nameController.text.trim(),
+        'apellido': lastNameController.text.trim(),
+        'email': emailController.text.trim(),
+      },
+    );
+
+
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Perfil actualizado correctamente')),
+    );
+
+    Navigator.pop(context); // 🔙 Regresa al perfil
+  }
 
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController();
-    final lastNameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return Scaffold(
       backgroundColor: const Color(0xFFF3EDE0),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
           child: Column(
             children: [
               Container(
@@ -25,50 +79,27 @@ class editarPerfil extends StatelessWidget {
                     bottomLeft: Radius.circular(100),
                   ),
                 ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Icon(
-                      Icons.account_circle,
-                      size: 100,
-                      color: Colors.black54,
-                    ),
-                    Positioned(
-                      bottom: 30,
-                      right: 120,
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.black54,
-                        size: 20,
-                      ),
-                    ),
-                  ],
+                child: const Icon(
+                  Icons.account_circle,
+                  size: 100,
+                  color: Colors.black54,
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Eneagrama 4',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+
               const SizedBox(height: 24),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
                     _TextField(controller: nameController, hint: 'Nombre'),
                     const SizedBox(height: 12),
-                    _TextField(controller: lastNameController, hint: 'Apellido'),
-                    const SizedBox(height: 12),
-                    _TextField(controller: emailController, hint: 'email@domain.com'),
+                    _TextField(
+                        controller: lastNameController, hint: 'Apellido'),
                     const SizedBox(height: 12),
                     _TextField(
-                      controller: passwordController,
-                      hint: 'Contraseña',
-                      obscureText: true,
-                    ),
+                        controller: emailController,
+                        hint: 'Correo electrónico'),
                     const SizedBox(height: 28),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -79,9 +110,7 @@ class editarPerfil extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 14),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: _saveChanges,
                       child: const Text(
                         'Guardar y Salir',
                         style: TextStyle(
@@ -131,3 +160,4 @@ class _TextField extends StatelessWidget {
     );
   }
 }
+

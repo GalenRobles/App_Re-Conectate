@@ -73,7 +73,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/editarPerfil',
         name: 'ActualizarUsuario',
-        builder: (context,state) => const editarPerfil(),
+        builder: (context,state) => const EditarPerfil(),
       ),
       GoRoute(path: '/perfil',
         name: 'perfil',
