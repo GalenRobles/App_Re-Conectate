@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart'; // ✅ necesario para redirección limpia
 import 'package:reconectate/app/theme/app_colors.dart';
 import 'package:reconectate/services/FirestoreService.dart';
 import 'editarPerfil.dart';
@@ -177,11 +178,14 @@ class _PerfilState extends State<Perfil> {
                       horizontal: 40, vertical: 12),
                 ),
                 onPressed: () async {
+                  // 🔹 Cierra sesión correctamente
                   await _auth.signOut();
-                  if (!mounted) return;
-                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-                },
 
+                  if (!mounted) return;
+
+                  // 🔹 Redirige limpiamente al Login (sin poder volver atrás)
+                  context.go('/login');
+                },
                 child: const Text(
                   'Cerrar Sesión',
                   style: TextStyle(fontWeight: FontWeight.w600),
@@ -200,7 +204,8 @@ class _PerfilState extends State<Perfil> {
                 children: [
                   _NavIcon(icon: Icons.home, label: 'Inicio'),
                   _NavIcon(icon: Icons.menu_book, label: 'Mis cursos'),
-                  _NavIcon(icon: Icons.person, label: 'Perfil', active: true),
+                  _NavIcon(
+                      icon: Icons.person, label: 'Perfil', active: true),
                 ],
               ),
             )
@@ -240,3 +245,4 @@ class _NavIcon extends StatelessWidget {
     );
   }
 }
+
