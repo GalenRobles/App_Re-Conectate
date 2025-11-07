@@ -178,9 +178,10 @@ class _PerfilState extends State<Perfil> {
                 ),
                 onPressed: () async {
                   await _auth.signOut();
-                  // Puedes navegar al login si quieres:
-                  // Navigator.pushReplacementNamed(context, '/login');
+                  if (!mounted) return;
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                 },
+
                 child: const Text(
                   'Cerrar Sesión',
                   style: TextStyle(fontWeight: FontWeight.w600),

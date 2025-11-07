@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:pinput/pinput.dart';
 
-// Pantalla de destino de ejemplo
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
