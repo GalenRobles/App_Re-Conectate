@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -13,10 +15,33 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
+
+
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   // Es una buena práctica usar controladores para los campos de texto
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  //login google
+  Future<UserCredential?>  login() async{
+  try{
+    final GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
+
+    if(googleuser == null){
+      return null;
+    }
+    final GoogleSignInAuthentication googleAuth = await googleuser.authentication;
+    final credential = GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+  }catch(e){
+    return null;
+  }
+
+  }
+
+
 
   // Y un GlobalKey para el formulario si vas a usar validación
   final _formKey = GlobalKey<FormState>();
@@ -100,15 +125,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: textTheme.bodySmall,
                   ),
                   const SizedBox(height: 20),
+                  //---------------------------------
+
+
+
+
                   SignInButton(
                     Buttons.Google,
                     text: "Continuar con Google",
-                    onPressed: () {
-                      // TODO: Aquí va la lógica de google_sign_in
+                    onPressed: () async{
+
+                      final userCredential = await login();
+
+                      if (userCredential != null) {
+                        print("¡Inicio de sesión exitoso! Usuario: ${userCredential.user?.displayName}");
+                      } else {
+                        print(
+                            "El inicio de sesión con Google falló o fue cancelado.");
+                      }
+
                     },
                   ),
                   const SizedBox(height: 20),
 
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------
                   // 6. Botón para ir a Registro (¡Muy importante!)
                   // Tu diseño no lo muestra, pero es fundamental para el flujo.
                   Row(

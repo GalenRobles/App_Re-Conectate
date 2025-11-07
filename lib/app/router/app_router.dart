@@ -9,7 +9,7 @@ import 'package:reconectate/app/shell/main_navigation_shell.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
-import 'package:reconectate/features/profile/presentation/screens/Codigo_ver.dart';
+import 'package:reconectate/features/profile/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 
@@ -47,7 +47,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/verific',
         name: 'Codigo_ver',
-        builder: (context, state) => const VerificationApp(),
+        builder: (context, state) {
+          // Obtenemos el email pasado desde el registro (debe ser un String)
+          final email = state.extra as String?;
+
+          // 🚨 CORRECCIÓN 2: Usamos OtpVerificationScreen (la clase existente)
+          // Si el email es nulo, volvemos a registro.
+          if (email == null) {
+            return const RegistrationScreen();
+          }
+
+          // Si el email existe, lo pasamos al constructor
+          return OtpVerificationScreen(email: email);
+        },
       ),
       GoRoute(path: '/editarPerfil',
         name: 'ActualizarUsuario',

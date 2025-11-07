@@ -1,3 +1,11 @@
+plugins {
+    // Otros plugins que ya puedas tener (como el de Kotlin, Android, etc.)
+
+    // 👇 AÑADE ESTA LÍNEA AQUÍ 👇
+    id("com.google.gms.google-services") version "4.4.1" apply false // Usa la versión más reciente
+}
+
+
 allprojects {
     repositories {
         google()
