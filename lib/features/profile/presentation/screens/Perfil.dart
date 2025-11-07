@@ -1,18 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/app/theme/app_colors.dart';
+import 'package:reconectate/services/FirestoreService.dart';
 import 'editarPerfil.dart';
 
-class Perfil extends StatelessWidget {
+class Perfil extends StatefulWidget {
   const Perfil({super.key});
+
+  @override
+  State<Perfil> createState() => _PerfilState();
+}
+
+class _PerfilState extends State<Perfil> {
+  final _auth = FirebaseAuth.instance;
+  final _firestoreService = FirestoreService();
+
+  Map<String, dynamic>? userProfile;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final data = await _firestoreService.getUserProfile(user.uid);
+      setState(() {
+        userProfile = data;
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.appBackground,
       body: SafeArea(
-        child: Column(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
           children: [
-            // Encabezado con ícono de usuario
+            // 🔹 Header
             Container(
               width: double.infinity,
               height: 180,
@@ -22,43 +54,62 @@ class Perfil extends StatelessWidget {
                   bottomLeft: Radius.circular(100),
                 ),
               ),
-              child: const Icon(
-                Icons.account_circle,
-                size: 100,
-                color: Colors.black54,
+              child: Center(
+                child: userProfile?['photoUrl'] != null
+                    ? CircleAvatar(
+                  radius: 50,
+                  backgroundImage:
+                  NetworkImage(userProfile!['photoUrl']),
+                )
+                    : const Icon(
+                  Icons.account_circle,
+                  size: 100,
+                  color: Colors.black54,
+                ),
               ),
             ),
 
             const SizedBox(height: 16),
 
-            // Texto del usuario
-            const Text(
-              'User1234567   Modelo: 4',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+            // 🔹 Nombre y apellido
+            Text(
+              '${userProfile?['nombre'] ?? 'Usuario'} ${userProfile?['apellido'] ?? ''}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
 
-            // Botón Editar Perfil
+            Text(
+              userProfile?['email'] ?? 'Sin correo',
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryRed,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 8),
               ),
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const editarPerfil()),
+                    builder: (context) => const EditarPerfil(),
+                  ),
                 );
+                _loadUserProfile(); //
               },
               child: const Text(
                 'Editar Perfil',
@@ -71,7 +122,6 @@ class Perfil extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Cuadro "Mejora tu plan"
             Container(
               width: 300,
               padding: const EdgeInsets.all(12),
@@ -91,7 +141,6 @@ class Perfil extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Botón Explorar curso completo
             ElevatedButton.icon(
               icon: const Icon(Icons.language, color: AppColors.white),
               style: ElevatedButton.styleFrom(
@@ -99,8 +148,8 @@ class Perfil extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24, vertical: 14),
               ),
               onPressed: () {},
               label: const Text(
@@ -114,7 +163,6 @@ class Perfil extends StatelessWidget {
 
             const Spacer(),
 
-            // 🔧 Botón "Cerrar Sesión" corregido
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: ElevatedButton(
@@ -124,24 +172,23 @@ class Perfil extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 40, vertical: 12),
                 ),
-                onPressed: () {
-                  // Aquí puedes agregar la lógica de logout
+                onPressed: () async {
+                  await _auth.signOut();
+                  // Puedes navegar al login si quieres:
+                  // Navigator.pushReplacementNamed(context, '/login');
                 },
                 child: const Text(
                   'Cerrar Sesión',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ),
 
             const SizedBox(height: 24),
 
-            // Barra inferior
             Container(
               height: 60,
               color: AppColors.white,
