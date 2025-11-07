@@ -25,14 +25,9 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
-
-// Nota: Generalmente se recomienda no tener la línea 'project.evaluationDependsOn(":app")' en la mayoría de los casos.
-// La elimino por ahora, asumiendo que es una configuración estándar.
-/*
 subprojects {
     project.evaluationDependsOn(":app")
 }
-*/
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)

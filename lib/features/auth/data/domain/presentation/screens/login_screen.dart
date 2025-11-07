@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
@@ -19,8 +21,32 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  // Es una buena práctica usar controladores para los campos de texto
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  //login google
+  Future<UserCredential?>  login() async{
+  try{
+    final GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
+
+    if(googleuser == null){
+      return null;
+    }
+    final GoogleSignInAuthentication googleAuth = await googleuser.authentication;
+    final credential = GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+  }catch(e){
+    return null;
+  }
+
+  }
+
+
+
+  // Y un GlobalKey para el formulario si vas a usar validación
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -80,6 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          // Usamos SingleChildScrollView para evitar que el teclado tape los campos
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -89,14 +116,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   const SizedBox(height: 60),
 
-                  // 1. Logo
+                  // 1. Logo de la Matrioska (¡Añadido!)
+                  // Debes agregar tu imagen en una carpeta 'assets/images/'
+                  // y declararla en pubspec.yaml
                   Image.asset(
-                    'assets/images/logo.png',
-                    height: 120,
+                    'assets/images/logo.png', // Ajusta esta ruta
+                    height: 120, // Ajusta el tamaño
                   ),
                   const SizedBox(height: 20),
 
-                  // 2. Títulos
+                  // 2. Títulos (como los tenías)
                   Text(
                     'RE-CONECTATE',
                     textAlign: TextAlign.center,
@@ -115,6 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _emailController,
                     hintText: 'Ingresa tu correo',
                     keyboardType: TextInputType.emailAddress,
+                    // TODO: Añadir validación desde core/utils/validators.dart
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
@@ -150,29 +180,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: textTheme.bodySmall,
                   ),
                   const SizedBox(height: 20),
-
-                  // --- BOTÓN DE GOOGLE (Restaurado) ---
                   SignInButton(
                     Buttons.Google,
-                    text: isLoading ? 'Cargando...' : "Continuar con Google",
-                    // Asignamos el placeholder. Lira/Edwin lo implementarán.
-                    onPressed: isLoading ? null : _loginWithGooglePlaceholder,
-                  ),
-                  // -------------------------------------
+                    text: "Continuar con Google",
+                    onPressed: () async{
 
+                      final userCredential = await login();
+
+                      if (userCredential != null) {
+                        print("¡Inicio de sesión exitoso! Usuario: ${userCredential.user?.displayName}");
+                      } else {
+                        print(
+                            "El inicio de sesión con Google falló o fue cancelado.");
+                      }
+
+                    },
+                  ),
                   const SizedBox(height: 20),
 
-                  // 6. Botón para ir a Registro
+                  // 6. Botón para ir a Registro (¡Muy importante!)
+                  // Tu diseño no lo muestra, pero es fundamental para el flujo.
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("¿No tienes cuenta?", style: textTheme.bodySmall),
+                //button
                       TextButton(
                         child: const Text('Regístrate'),
                         onPressed: () {
+                          // Usando el nuevo path
                           context.push('/registre');
                         },
                       ),
+                          // Ejemplo con go_router: context.push('/register');
+
+
                     ],
                   ),
                 ],
