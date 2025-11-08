@@ -7,7 +7,6 @@ import 'package:reconectate/features/auth/data/domain/presentation/screens/splas
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 // ¡ESTA ES LA IMPORTACIÓN CORRECTA PARA EL REGISTRO!
 import 'package:reconectate/features/auth/data/domain/presentation/screens/register_screen.dart';
-import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
