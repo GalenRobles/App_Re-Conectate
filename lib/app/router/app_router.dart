@@ -32,9 +32,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/',
         name: 'splash',
-        // ¡CORRECCIÓN DE ARQUITECTURA!
-        // La Splash screen no debe ir a /login, debe ir al AuthGate.
-        // El AuthGate decidirá si va a Home o Login.
         builder: (context, state) => const AuthGate(),
       ),
       GoRoute(

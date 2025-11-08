@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:reconectate/app/theme/app_colors.dart';
 import 'package:reconectate/providers/auth_providers.dart';
 
-// Definimos los colores exactos para el degradado que no están en AppColors
-// Color(0xFFD62837) ya es primaryRed
+// Definimos el color exacto para el degradado que no está en AppColors
 final Color _yellowGold = const Color(0xFFF6C555); // Amarillo/Dorado exacto
 
 // ----------------------------------------------------------------------
@@ -19,7 +18,7 @@ Widget _buildPersonalityType(BuildContext context, String type, String name) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(type, style: Theme.of(context).textTheme.bodyMedium),
+        Text(type, style: Theme.of(context).textTheme.bodyMedium), //
         Text(name, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.bold,
         )),
@@ -38,7 +37,7 @@ Widget _buildExpansionTile({
 }) {
   return Container(
     decoration: BoxDecoration(
-      color: AppColors.white,
+      color: AppColors.white, //
       borderRadius: BorderRadius.circular(12),
       boxShadow: [
         BoxShadow(
@@ -51,7 +50,7 @@ Widget _buildExpansionTile({
     child: ExpansionTile(
       leading: CircleAvatar(
         backgroundColor: iconBackgroundColor,
-        child: Icon(icon, color: AppColors.textPrimary),
+        child: Icon(icon, color: AppColors.textPrimary), //
       ),
       title: Text(
         title,
@@ -71,7 +70,7 @@ Widget _buildCreatorBanner(BuildContext context) {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      // ¡CORRECCIÓN DEL DEGRADADO! Usamos los colores fuertes al 100% de opacidad.
+      // DEGRADADO FINAL: Rojo -> Dorado
       gradient: LinearGradient(
         colors: [
           AppColors.primaryRed, // D62837
@@ -86,8 +85,8 @@ Widget _buildCreatorBanner(BuildContext context) {
       children: [
         const CircleAvatar(
           radius: 30,
-          // FOTO DE CLIENTA: Usamos ruta de Assets
-          backgroundImage: AssetImage('assets/images/foto_clienta.png'),
+          // Foto de la clienta
+          backgroundImage: AssetImage('assets/images/foto_creadora.png'),
           backgroundColor: AppColors.white,
         ),
         const SizedBox(width: 16),
@@ -128,11 +127,11 @@ class HomeView extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: AppColors.appBackground, //
+      backgroundColor: AppColors.appBackground,
 
       // --- 1. AppBar Personalizado ---
       appBar: AppBar(
-        title: Image.asset('assets/images/logo.png', height: 35),
+        title: Image.asset('assets/images/logo.png', height: 35), //
         centerTitle: false,
         backgroundColor: AppColors.appBackground,
         elevation: 0,
@@ -154,20 +153,20 @@ class HomeView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Video Destacado
               Text('Video Destacado', style: textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary)),
               const SizedBox(height: 16),
-              // Placeholder del video
               Container(height: 200, decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(12))),
               const SizedBox(height: 24),
 
-              _buildCreatorBanner(context), // Llama al widget con el degradado
+              _buildCreatorBanner(context), // El bloque con degradado
 
               const SizedBox(height: 24),
 
               Text('Eneagrama: La Herramienta', style: textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary)),
               const SizedBox(height: 16),
 
-              // Bloques Desplegables (Usando los widgets auxiliares)
+              // Bloques Desplegables
               _buildExpansionTile(
                 context: context,
                 iconBackgroundColor: AppColors.primaryYellow.withOpacity(0.3),
@@ -203,10 +202,10 @@ class HomeView extends ConsumerWidget {
 
       // --- 4. Menu Inferior (BottomNavigationBar) ---
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.white, //
+        backgroundColor: AppColors.white,
         currentIndex: 0, // Inicio (Home)
-        selectedItemColor: AppColors.primaryRed, //
-        unselectedItemColor: AppColors.textSecondary, //
+        selectedItemColor: AppColors.primaryRed,
+        unselectedItemColor: AppColors.textSecondary,
         onTap: (index) {
           if (index == 0) context.go('/home');
           if (index == 2) context.go('/perfil');
