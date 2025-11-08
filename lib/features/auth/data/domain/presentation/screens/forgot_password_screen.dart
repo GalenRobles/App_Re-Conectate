@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // NECESARIO para FirebaseAuthException
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
 
@@ -28,7 +28,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   }
 
   // -------------------------------------------------------------------
-  // LÓGICA DE ENVÍO DE EMAIL DE RECUPERACIÓN
+  // LÓGICA DE ENVÍO DE EMAIL DE RECUPERACIÓN (COMPLETA Y SEGURA)
   // -------------------------------------------------------------------
   void _handlePasswordReset() async {
     if (!_formKey.currentState!.validate()) {
@@ -37,40 +37,53 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     final String email = _emailController.text.trim();
 
-    // Accede a los servicios que acabas de crear
+    // Accede a los servicios que creaste
     final resetPassword = ref.read(passwordResetProvider);
-    final authNotifier = ref.read(authNotifierProvider.notifier); // Para manejar el estado de carga
+    // Usamos el notifier para el estado de carga
+    final authNotifier = ref.read(authNotifierProvider.notifier);
 
     try {
-      // Activa el estado de carga manualmente si es necesario, aunque el notifier lo hace
-      // Notifier ya maneja 'state = true' y 'false'
-
+      // 1. Ejecuta la función de envío de correo
       await resetPassword(email: email);
 
-      // ÉXITO: Muestra un mensaje y regresa a Login
+      // 2. ÉXITO (INDEPENDIENTEMENTE SI EL CORREO EXISTE O NO)
+      // Este mensaje genérico evita que un atacante sepa si el correo está registrado.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('✅ Enlace de recuperación enviado. Revisa tu correo.'),
+          content: Text('✅ Si el correo existe, el enlace de recuperación ha sido enviado.'),
           backgroundColor: Colors.green,
         ),
       );
-      // Navega de vuelta a Login para que el usuario pueda usar el enlace
+
+      // 3. Navega de vuelta a Login después del éxito (simulado o real)
       context.go('/login');
 
     } on FirebaseAuthException catch (e) {
-      // Captura y muestra errores específicos (ej. correo no registrado)
-      String message = 'No se pudo enviar el correo.';
-      if (e.code == 'user-not-found') {
-        message = 'No existe una cuenta registrada con ese correo.';
+      // 4. Captura errores de red, formato, o de Firebase (pero no user-not-found)
+      String message = 'Error: No se pudo restablecer la contraseña.';
+
+      if (e.code == 'invalid-email') {
+        message = 'El formato del correo electrónico es incorrecto.';
+      } else if (e.code == 'user-not-found') {
+        // Por seguridad UX, si el error es 'user-not-found',
+        // tratamos el error como éxito para no dar pistas.
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Si el correo existe, el enlace de recuperación ha sido enviado.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        context.go('/login');
+        return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message), backgroundColor: Colors.red),
       );
     } catch (e) {
-      // Captura otros errores
+      // Captura otros errores (ej. de conexión)
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red),
+        SnackBar(content: Text('Error inesperado: ${e.toString()}'), backgroundColor: Colors.red),
       );
     }
   }

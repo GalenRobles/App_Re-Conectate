@@ -61,7 +61,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           // 🚨 CORRECCIÓN 2: Usamos OtpVerificationScreen (la clase existente)
           // Si el email es nulo, volvemos a registro.
           if (email == null) {
-            return const RegistrationScreen();
+            return const RegisterScreen();
           }
 
           // Si el email existe, lo pasamos al constructor
