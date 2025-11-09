@@ -12,10 +12,10 @@ class EmailService {
   // Obtén tu API Key de SendGrid (empieza por 'SG.').
   // ADVERTENCIA: Esta clave API está expuesta en el código fuente de tu app.
   // Es mejor usar una cuenta con permisos restringidos (Custom Access -> Mail Send).
-  static const String _sendGridApiKey = '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';
+  static const String _sendGridApiKey = 'buscar en archivo .env';
 
   // Reemplaza con el email verificado que usas en SendGrid (ej: no-reply@tuapp.com)
-  static const String _senderEmail = 'aplicacionreconectate@gmail.com';
+  static const String _senderEmail = 'buscar en archivo .env';
   // ---------------------------------------------------
 
   final String _otpCollection = 'user_otps';
@@ -67,7 +67,7 @@ class EmailService {
         'name': 'Equipo Re-Conectate'
       },
       // ATENCIÓN: Debes usar el 'template_id' de la plantilla dinámica que creaste en SendGrid.
-      'template_id': 'd-2bc07a6f6c324bbe94a987e83e1b6eae' // <-- ¡REEMPLAZAR!
+      'template_id': 'buscar en archivo .env' // <-- ¡REEMPLAZAR!
     };
 
     try {

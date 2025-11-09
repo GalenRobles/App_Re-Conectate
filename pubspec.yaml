@@ -18,6 +18,7 @@ dependencies:
   #-- FUNCION PARA EL CÓDIGO DE VERIFICACION--
   http: ^1.2.1
   pinput: ^4.0.0
+  flutter_dotenv: any
 
 
 
