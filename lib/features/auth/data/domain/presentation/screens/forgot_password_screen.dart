@@ -57,7 +57,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
       // 3. Navega de vuelta a Login después del éxito (simulado o real)
       context.go('/');
-
     } on FirebaseAuthException catch (e) {
       // 4. Captura errores de red, formato, o de Firebase (pero no user-not-found)
       String message = 'Error: No se pudo restablecer la contraseña.';
