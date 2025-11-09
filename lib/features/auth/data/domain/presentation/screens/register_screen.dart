@@ -18,6 +18,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  // 1. Controladores (Añadido _confirmPasswordController)
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -25,10 +26,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
 
   final EmailService _emailService = EmailService(); // <--- 2. INICIALIZADO
+  //final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    // 2. Dispose (Añadido _confirmPasswordController)
     _nameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -37,8 +40,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
-  // Lógica de Registro (AÑADIDA LLAMADA A SEND OTP)
+  // Lógica de Registro (sin cambios, ya que la validación se hace en el Form)
   void _handleRegistration() async {
+    // 1. Validar el formulario (¡Ahora valida también la confirmación!)
     if (!_formKey.currentState!.validate()) {
       print('DEBUG-0.5: Falló la validación del formulario.');
       return;
@@ -60,7 +64,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     try {
       print('DEBUG-1: Iniciando autenticación...');
 
-      // Paso 1: Crear el usuario en Firebase
       final userCredential = await authNotifier.signUpWithEmail(
         email: email,
         password: password,
@@ -68,7 +71,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       print('DEBUG-2: Autenticación EXITOSA! UID: ${userCredential.user!.uid}');
 
-      // Paso 2: Crear el perfil en Firestore
       await firestoreService.createUserProfile(
         userId: userCredential.user!.uid,
         email: email,
@@ -108,16 +110,27 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         // await userCredential.user?.delete();
       }
 
+      // ÉXITO: Navegación ocurre vía AuthGate
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go('/verific');
+      });
 
     } on FirebaseAuthException catch (e) {
-      print('DEBUG-5: FALLO AUTH - Código: ${e.code}');
+      String message = 'Error de Autenticación.';
+      if (e.code == 'email-already-in-use') {
+        message = 'Ese correo ya está registrado. Inicia sesión.';
+      } else if (e.code == 'weak-password') {
+        message = 'La contraseña debe tener 6 caracteres o más.';
+      } else if (e.code == 'invalid-email') {
+        message = 'El formato del correo electrónico es incorrecto.';
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Fallo en la autenticación: ${e.message}'), backgroundColor: Colors.red)
+        SnackBar(content: Text(message)),
       );
     } catch (e) {
-      print('DEBUG-6: FALLO GENERAL - Causa: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ocurrió un error inesperado.'), backgroundColor: Colors.red)
+        SnackBar(content: Text('Error inesperado: ${e.toString()}')),
       );
     }
   }
@@ -139,8 +152,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 40),
-                  Text('¡Crea tu Cuenta!', textAlign: TextAlign.center, style: textTheme.headlineMedium),
-                  const SizedBox(height: 30),
+
+                  // --- 1. LOGO CENTRADO ARRIBA ---
+                  Center( // Usamos Center para centrar el logo y los títulos
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/logo.png', // [cite: uploaded:galenrobles/app_re-conectate/App_Re-Conectate-RegistroLogin/assets/images/logo.png]
+                          height: 120,
+                        ),
+                        const SizedBox(height: 20),
+                        // Título de la pantalla
+                        Text('¡Crea tu Cuenta!', textAlign: TextAlign.center, style: textTheme.headlineMedium),
+                        const SizedBox(height: 30),
+                      ],
+                    ),
+                  ),
 
                   // --- CAMPOS DE REGISTRO ---
                   CustomTextField(
@@ -172,11 +199,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Confirmar Contraseña
+                  // 3. CAMPO AÑADIDO: Confirmar Contraseña
                   CustomTextField(
                     controller: _confirmPasswordController,
                     hintText: 'Confirmar Contraseña',
                     obscureText: true,
+                    // 4. LÓGICA DE VALIDACIÓN AÑADIDA
                     validator: (v) {
                       if (v!.isEmpty) {
                         return 'Confirma tu contraseña';
@@ -189,15 +217,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 40),
 
-                  // Botón de Registro
+                  // 4. Botón de Registro (sin cambios)
                   CustomButton(
                     text: isLoading ? 'Registrando...' : 'Registrarme',
                     onPressed: isLoading ? null : _handleRegistration,
-
                   ),
                   const SizedBox(height: 30),
 
-                  // Botón para ir a Login
+                  // 5. Botón para ir a Login (sin cambios)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
