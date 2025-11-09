@@ -67,7 +67,7 @@ class EmailService {
         'name': 'Equipo Re-Conectate'
       },
       // ATENCIÓN: Debes usar el 'template_id' de la plantilla dinámica que creaste en SendGrid.
-      'template_id': 'buscar en archivo .env' // <-- ¡REEMPLAZAR!
+      'template_id': 'buscar en archivo .env  ' // <-- ¡REEMPLAZAR!
     };
 
     try {
