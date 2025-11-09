@@ -16,8 +16,10 @@ dependencies:
   flutter:
     sdk: flutter
   #-- FUNCION PARA EL CÓDIGO DE VERIFICACION--
-  http: ^0.13.6
+  http: ^1.2.1
   pinput: ^4.0.0
+
+
 
 
 
@@ -34,6 +36,7 @@ dependencies:
   firebase_core: any
   firebase_auth: any
   cloud_firestore: any
+  cloud_functions: any
 
   # 4. Login con Google (Tu diseño lo incluye)
   google_sign_in: ^6.3.0

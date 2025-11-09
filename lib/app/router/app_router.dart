@@ -7,7 +7,7 @@ import 'package:reconectate/features/auth/data/domain/presentation/screens/splas
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 // ¡ESTA ES LA IMPORTACIÓN CORRECTA PARA EL REGISTRO!
 import 'package:reconectate/features/auth/data/domain/presentation/screens/register_screen.dart';
-import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
+// 🚨 MANTENEMOS ESTA IMPORTACIÓN, DEBE SER EL ORIGEN DE LA CLASE OtpVerificationScreen
 import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
@@ -51,6 +51,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/registre',
         name: 'Crear_cuenta',
+        // Usamos RegisterScreen
         builder: (context, state) => const RegisterScreen(),
 
       ),
@@ -61,18 +62,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           // Obtenemos el email pasado desde el registro (debe ser un String)
           final email = state.extra as String?;
 
-          // 🚨 CORRECCIÓN 2: Usamos OtpVerificationScreen (la clase existente)
-          // Si el email es nulo, volvemos a registro.
+          // 🚨 Si el email es nulo, volvemos a registro.
           if (email == null) {
-            return const RegistrationScreen();
+            return const  RegisterScreen();
           }
 
-          // Si el email existe, lo pasamos al constructor
+          // 🚨 RETORNA LA CLASE OtpVerificationScreen.
           return OtpVerificationScreen(email: email);
         },
       ),
       GoRoute(path: '/editarPerfil',
         name: 'ActualizarUsuario',
+        // 🚨 Aquí corregimos el nombre de la clase, que suele ser mayúscula.
         builder: (context,state) => const EditarPerfil(),
       ),
       GoRoute(path: '/perfil',

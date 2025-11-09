@@ -8,7 +8,7 @@ import 'package:reconectate/core/widgets/custom_text_field.dart';
 // Importa los servicios clave
 import 'package:reconectate/providers/auth_login_notifier.dart';
 import 'package:reconectate/providers/auth_providers.dart';
-
+import 'package:reconectate/services/email_service.dart'; // <--- 1. IMPORTADO
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -18,29 +18,27 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  // 1. Controladores (Añadido _confirmPasswordController)
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController(); // <-- AÑADIDO
+  final _confirmPasswordController = TextEditingController();
 
+  final EmailService _emailService = EmailService(); // <--- 2. INICIALIZADO
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    // 2. Dispose (Añadido _confirmPasswordController)
     _nameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose(); // <-- AÑADIDO
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  // Lógica de Registro (sin cambios, ya que la validación se hace en el Form)
+  // Lógica de Registro (AÑADIDA LLAMADA A SEND OTP)
   void _handleRegistration() async {
-    // 1. Validar el formulario (¡Ahora valida también la confirmación!)
     if (!_formKey.currentState!.validate()) {
       print('DEBUG-0.5: Falló la validación del formulario.');
       return;
@@ -54,9 +52,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final String nombre = _nameController.text.trim();
     final String apellido = _lastNameController.text.trim();
 
+    // Mostrar un Snackbar genérico de "Registrando..."
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Creando cuenta y enviando código...'), backgroundColor: Colors.blue)
+    );
+
     try {
       print('DEBUG-1: Iniciando autenticación...');
 
+      // Paso 1: Crear el usuario en Firebase
       final userCredential = await authNotifier.signUpWithEmail(
         email: email,
         password: password,
@@ -64,6 +68,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       print('DEBUG-2: Autenticación EXITOSA! UID: ${userCredential.user!.uid}');
 
+      // Paso 2: Crear el perfil en Firestore
       await firestoreService.createUserProfile(
         userId: userCredential.user!.uid,
         email: email,
@@ -71,18 +76,49 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         apellido: apellido,
       );
 
-      print('DEBUG-3: Escritura en Firestore EXITOSA! Navegando...');
+      print('DEBUG-3: Escritura en Firestore EXITOSA!');
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/verific');
-      });
+      // ----------------------------------------------------
+      // PASO CRUCIAL AÑADIDO: ENVIAR EL CORREO OTP
+      // ----------------------------------------------------
+      print('DEBUG-3.5: Iniciando envío de correo OTP...');
+      final bool emailSent = await _emailService.sendOtpEmail(email);
+
+      if (emailSent) {
+        print('DEBUG-4: Correo enviado. Navegando a verificación.');
+
+        // Limpiar el Snackbar antes de navegar
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+        // Paso 4: Navegar si el envío de correo fue exitoso
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.go('/verific', extra: email);
+        });
+
+      } else {
+        // El correo falló (error de EmailJS, credenciales, etc.)
+        print('DEBUG-4: FALLO en el envío del correo OTP. Revisa la consola.');
+
+        // Muestra un error al usuario y NO navega
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error al enviar el código de verificación. Revisa la configuración del servidor de correo.'), backgroundColor: Colors.red)
+        );
+
+        // Opcional: Podrías considerar eliminar el usuario recién creado si el envío de OTP es crítico.
+        // await userCredential.user?.delete();
+      }
+
 
     } on FirebaseAuthException catch (e) {
-      print('DEBUG-4: FALLO AUTH - Código: ${e.code}');
-      // ... (Manejo de errores)
+      print('DEBUG-5: FALLO AUTH - Código: ${e.code}');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fallo en la autenticación: ${e.message}'), backgroundColor: Colors.red)
+      );
     } catch (e) {
-      print('DEBUG-5: FALLO GENERAL - Causa: $e');
-      // ... (Manejo de errores)
+      print('DEBUG-6: FALLO GENERAL - Causa: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ocurrió un error inesperado.'), backgroundColor: Colors.red)
+      );
     }
   }
 
@@ -136,12 +172,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // 3. CAMPO AÑADIDO: Confirmar Contraseña
+                  // Confirmar Contraseña
                   CustomTextField(
                     controller: _confirmPasswordController,
                     hintText: 'Confirmar Contraseña',
                     obscureText: true,
-                    // 4. LÓGICA DE VALIDACIÓN AÑADIDA
                     validator: (v) {
                       if (v!.isEmpty) {
                         return 'Confirma tu contraseña';
@@ -154,14 +189,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 40),
 
-                  // 4. Botón de Registro (sin cambios)
+                  // Botón de Registro
                   CustomButton(
                     text: isLoading ? 'Registrando...' : 'Registrarme',
                     onPressed: isLoading ? null : _handleRegistration,
+
                   ),
                   const SizedBox(height: 30),
 
-                  // 5. Botón para ir a Login (sin cambios)
+                  // Botón para ir a Login
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
