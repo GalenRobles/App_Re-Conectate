@@ -25,6 +25,10 @@ dependencies:
 
 
 
+
+
+
+
   # --- A) NUESTRAS ADICIONES (El "Core" de la app) ---
 
   # 1. State Management (Nuestra elección)
@@ -48,6 +52,7 @@ dependencies:
   # --- B) DEPENDENCIAS POR DEFECTO ---
   cupertino_icons: ^1.0.8
   equatable: ^2.0.7
+  flutter_launcher_icons: ^0.14.4
 
 #
 # --- DEPENDENCIAS DE DESARROLLO ---
@@ -85,3 +90,8 @@ flutter:
   #       - asset: assets/fonts/TuFuente-Regular.ttf
   #       - asset: assets/fonts/TuFuente-Bold.ttf
   #         weight: 700
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
