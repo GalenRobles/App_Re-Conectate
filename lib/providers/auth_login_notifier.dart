@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,19 +27,24 @@ class AuthNotifier extends StateNotifier<bool> {
   }) async {
     state = true;
     try {
+      // AÑADIMOS UN TIMEOUT de 10 segundos
+      // Si Firebase no responde (por el error de reCAPTCHA), esto lanzará una excepción.
       await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      ).timeout(const Duration(seconds: 10)); // <-- ¡LÍNEA MODIFICADA!
+
     } on FirebaseAuthException {
-      rethrow;
+      rethrow; // Pasa el error a la UI
+    } on TimeoutException { // <-- ¡NUEVO BLOQUE CATCH!
+      // Captura el error si la red falla
+      throw Exception('El inicio de sesión tardó demasiado (Timeout). Revisa tu conexión.');
     } finally {
-      state = false;
+      state = false; // <-- Esto AHORA SÍ se ejecutará
     }
   }
-
   // ------------------------------------------------------------
-  // B) REGISTRO CON EMAIL Y CONTRASEÑA (CRÍTICO)
+  // B) REGISTRO CON EMAIL Y CONTRASEÑA ()
   // ------------------------------------------------------------
   Future<UserCredential> signUpWithEmail({
     required String email,
