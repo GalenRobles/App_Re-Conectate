@@ -38,11 +38,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AuthGate(),
       ),
       GoRoute(
-        path: '/login',
-        name: 'login',
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
         path: '/forgotPassword',
         name: 'Recuperar_contra',
         builder: (context, state) => const ForgotPasswordScreen(),
