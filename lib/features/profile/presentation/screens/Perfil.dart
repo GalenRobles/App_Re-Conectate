@@ -184,7 +184,7 @@ class _PerfilState extends State<Perfil> {
                   if (!mounted) return;
 
                   // 🔹 Redirige limpiamente al Login (sin poder volver atrás)
-                  context.go('/login');
+                  context.go('/');
                 },
                 child: const Text(
                   'Cerrar Sesión',
