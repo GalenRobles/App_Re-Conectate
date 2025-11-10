@@ -97,10 +97,6 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     _TextField(
                         controller: lastNameController, hint: 'Apellido'),
                     const SizedBox(height: 12),
-                    _TextField(
-                        controller: emailController,
-                        hint: 'Correo electrónico'),
-                    const SizedBox(height: 28),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,

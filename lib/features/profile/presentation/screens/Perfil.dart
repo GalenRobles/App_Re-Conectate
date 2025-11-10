@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:go_router/go_router.dart'; // ✅ necesario para redirección limpia
+import 'package:go_router/go_router.dart';
 import 'package:reconectate/app/theme/app_colors.dart';
 import 'package:reconectate/services/FirestoreService.dart';
 import 'editarPerfil.dart';
@@ -178,12 +178,11 @@ class _PerfilState extends State<Perfil> {
                       horizontal: 40, vertical: 12),
                 ),
                 onPressed: () async {
-                  // 🔹 Cierra sesión correctamente
                   await _auth.signOut();
 
                   if (!mounted) return;
 
-                  // 🔹 Redirige limpiamente al Login (sin poder volver atrás)
+                  // 🔹 Redirige limpiamente al Login
                   context.go('/login');
                 },
                 child: const Text(
@@ -195,20 +194,32 @@ class _PerfilState extends State<Perfil> {
 
             const SizedBox(height: 24),
 
-            // Barra inferior
+            // 🔹 Barra inferior con navegación funcional
             Container(
               height: 60,
               color: AppColors.white,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _NavIcon(icon: Icons.home, label: 'Inicio'),
-                  _NavIcon(icon: Icons.menu_book, label: 'Mis cursos'),
                   _NavIcon(
-                      icon: Icons.person, label: 'Perfil', active: true),
+                    icon: Icons.home,
+                    label: 'Inicio',
+                    onTap: () => context.go('/home'),
+                  ),
+                  _NavIcon(
+                    icon: Icons.menu_book,
+                    label: 'Mis cursos',
+                    onTap: () => context.go('/cursos'),
+                  ),
+                  _NavIcon(
+                    icon: Icons.person,
+                    label: 'Perfil',
+                    active: true,
+                    onTap: () => context.go('/perfil'),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -216,33 +227,42 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
+// 🔹 Widget de ícono de navegación
 class _NavIcon extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool active;
+  final VoidCallback? onTap;
 
   const _NavIcon({
     required this.icon,
     required this.label,
     this.active = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon,
-            color: active ? AppColors.primaryRed : AppColors.textSecondary),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
+    return GestureDetector(
+      onTap: onTap, // 👈 cuando se toca, ejecuta la navegación
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
             color: active ? AppColors.primaryRed : AppColors.textSecondary,
           ),
-        ),
-      ],
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: active ? AppColors.primaryRed : AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
 

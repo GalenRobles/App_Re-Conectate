@@ -16,7 +16,7 @@ import 'package:reconectate/features/profile/presentation/screens/editarPerfil.d
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 
 // (Si tienes estas pantallas, asegúrate de importarlas)
-import 'package:reconectate/features/home/presentation/screens/home.dart';
+import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
 
 // ¡IMPORTA EL AUTHGATE Y EL HOME!
 import 'package:reconectate/navigation/auth_gate.dart';
