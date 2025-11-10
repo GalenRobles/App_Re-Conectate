@@ -1,9 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart'; // NECESARIO para el botón de Google
+
+// Importa los servicios clave
+import 'package:reconectate/providers/auth_login_notifier.dart';
+import 'package:reconectate/providers/auth_providers.dart';
 
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -18,6 +25,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  //login google
+  Future<UserCredential?>  login() async{
+  try{
+    final GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
+
+    if(googleuser == null){
+      return null;
+    }
+    final GoogleSignInAuthentication googleAuth = await googleuser.authentication;
+    final credential = GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+  }catch(e){
+    return null;
+  }
+
+  }
+
+
+
   // Y un GlobalKey para el formulario si vas a usar validación
   final _formKey = GlobalKey<FormState>();
 
@@ -28,8 +56,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  // -------------------------------------------------------------------
+  // LÓGICA DE LOGIN CON EMAIL/PASS (COMPLETA)
+  // -------------------------------------------------------------------
+  void _loginWithEmail() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final notifier = ref.read(authNotifierProvider.notifier);
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    try {
+      await notifier.signInWithEmail(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      String message = 'Error de Login.';
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        message = 'Correo o contraseña incorrectos.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error inesperado: $e')),
+      );
+    }
+  }
+
+  // -------------------------------------------------------------------
+  // LÓGICA DE LOGIN CON GOOGLE (Placeholder para Lira/Edwin)
+  // -------------------------------------------------------------------
+  void _loginWithGooglePlaceholder() {
+    // Tarea reasignada a Lira/Edwin: Implementar la llamada a authNotifier.signInWithGoogle()
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Función de Google pendiente por implementar.')),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    // Observa el estado de carga para deshabilitar botones
+    final isLoading = ref.watch(authNotifierProvider);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -59,17 +129,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Text(
                     'RE-CONECTATE',
                     textAlign: TextAlign.center,
-                    style: textTheme.headlineMedium, // Usando tu tema
+                    style: textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Ingresa tus datos para iniciar sesión',
                     textAlign: TextAlign.center,
-                    style: textTheme.bodySmall, // Usando tu tema
+                    style: textTheme.bodySmall,
                   ),
                   const SizedBox(height: 40),
 
-                  // 3. Campos de texto (usando nuestro widget)
+                  // 3. Campos de texto
                   CustomTextField(
                     controller: _emailController,
                     hintText: 'Ingresa tu correo',
@@ -82,14 +152,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     hintText: 'Contraseña',
                     obscureText: true,
                   ),
-                  const SizedBox(height: 40),
 
-                  // 4. Botón de Ingresar (como lo tenías)
+                  // --- ENLACE DE RECUPERACIÓN DE CONTRASEÑA ---
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      child: const Text('¿Olvidaste la contraseña?'),
+                      onPressed: () {
+                        context.push('/forgotPassword');
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // 4. Botón de Ingresar
                   CustomButton(
-                    text: 'Ingresar', // Tu diseño usa 'Ingresar'
-                    onPressed: () {
-                      // TODO: Aquí va la lógica de login con Riverpod
-                    },
+                    text: isLoading ? 'Cargando...' : 'Ingresar',
+                    onPressed: isLoading ? null : _loginWithEmail, // Conectado a la lógica
                   ),
                   const SizedBox(height: 30),
 
@@ -103,8 +183,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   SignInButton(
                     Buttons.Google,
                     text: "Continuar con Google",
-                    onPressed: () {
-                      // TODO: Aquí va la lógica de google_sign_in
+                    onPressed: () async{
+
+                      final userCredential = await login();
+
+                      if (userCredential != null) {
+                        print("¡Inicio de sesión exitoso! Usuario: ${userCredential.user?.displayName}");
+                      } else {
+                        print(
+                            "El inicio de sesión con Google falló o fue cancelado.");
+                      }
+
                     },
                   ),
                   const SizedBox(height: 20),

@@ -5,17 +5,23 @@ class FirestoreService {
 
   // [LLAMADO POR LIRA]
   // Crea el documento inicial del perfil cuando se registra un usuario.
-  Future<void> createUserProfile(String userId, String email) async {
+  // Función que crea el documento inicial del perfil al registrarse un usuario.
+  Future<void> createUserProfile({ // <--- CAMBIO: Usamos Named Parameters
+    required String userId,
+    required String email,
+    required String nombre, // <--- AÑADIDO: Para recibir el dato del formulario
+    required String apellido, // <--- AÑADIDO: Para recibir el dato del formulario
+  }) async {
     await _db.collection('users').doc(userId).set({
+      'nombre': nombre,
+      'apellido': apellido,
       'email': email,
-      'nombre': '',
-      'apellido': '',
-      'createdAt': FieldValue.serverTimestamp(),
+      'createdAt': FieldValue.serverTimestamp(), // Opcional, pero buena práctica
     });
   }
 
   // [LLAMADO POR EDWIN]
-  // Obtiene los datos del perfil del usuario.
+  // Función que lee los datos del perfil para mostrarlos en Editar Perfil.
   Future<Map<String, dynamic>?> getUserProfile(String userId) async {
     final doc = await _db.collection('users').doc(userId).get();
     if (doc.exists) {
