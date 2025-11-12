@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       });
 
     } on FirebaseAuthException catch (e) {
-      String message = 'Error de Autenticación.';
+      String message = 'Ocurrió un error al registrar tu cuenta. Por favor, inténtalo de nuevo.';
       if (e.code == 'email-already-in-use') {
         message = 'Ese correo ya está registrado. Inicia sesión.';
       } else if (e.code == 'weak-password') {
@@ -79,7 +79,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error inesperado: ${e.toString()}')),
+        SnackBar(content: Text('Error inesperado: No pudimos completar el registro.')),
       );
     }
   }
