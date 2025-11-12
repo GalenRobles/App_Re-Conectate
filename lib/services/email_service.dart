@@ -12,7 +12,7 @@ class EmailService {
   // Obtén tu API Key de SendGrid (empieza por 'SG.').
   // ADVERTENCIA: Esta clave API está expuesta en el código fuente de tu app.
   // Es mejor usar una cuenta con permisos restringidos (Custom Access -> Mail Send).
-  static const String _sendGridApiKey = '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';
+  static const String _sendGridApiKey = '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';
 
 
 

@@ -55,19 +55,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       ),
       GoRoute(
-        path: '/verific',
-        name: 'Codigo_ver',
+        path: '/verific', // El path que usas en register_screen.dart
         builder: (context, state) {
-          // Obtenemos el email pasado desde el registro (debe ser un String)
-          final email = state.extra as String?;
+          // Recupera el parámetro 'extra' (el email) que pasaste desde RegisterScreen
+          final String? email = state.extra as String?;
 
-          // 🚨 CORRECCIÓN 2: Usamos OtpVerificationScreen (la clase existente)
-          // Si el email es nulo, volvemos a registro.
+          // Es crucial pasar el email para que la pantalla de verificación sepa
+          // a qué usuario se le debe verificar el código.
           if (email == null) {
-            return const  RegisterScreen();
+            // Si por alguna razón el email no se pasó, redirige a la pantalla de login
+            return const LoginScreen();
           }
-
-          // Si el email existe, lo pasamos al constructor
           return OtpVerificationScreen(email: email);
         },
       ),
