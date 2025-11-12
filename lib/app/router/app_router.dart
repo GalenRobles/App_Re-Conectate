@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// 1. Importa el "Shell" o contenedor principal (si ya lo tienes)
+// --- Shell principal con BottomNavigationBar ---
 import 'package:reconectate/app/shell/main_navigation_shell.dart';
 
-// 2. Importa las pantallas necesarias
+// --- Pantallas de autenticación ---
 import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/register_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
-import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
-import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
-
-// Pantallas principales
-import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
-import 'package:reconectate/features/profile/presentation/screens/Cursos.dart'; //
-
-// AuthGate y otras
-import 'package:reconectate/navigation/auth_gate.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/forgot_password_screen.dart';
+
+// --- Pantallas principales ---
+import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
+import 'package:reconectate/features/profile/presentation/screens/Cursos.dart';
+import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
+import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
+
+// --- Control de sesión ---
+import 'package:reconectate/navigation/auth_gate.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -42,10 +42,10 @@ class MyApp extends ConsumerWidget {
   }
 }
 
-// --- Router de la app (Riverpod Provider) ---
+// --- ROUTER CONFIG ---
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/', // Ruta inicial
+    initialLocation: '/',
     debugLogDiagnostics: true,
     routes: [
       // --- A. RUTAS DE AUTENTICACIÓN ---
@@ -73,28 +73,68 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return OtpVerificationScreen(email: email);
         },
       ),
-      GoRoute(
-        path: '/editarPerfil',
-        name: 'ActualizarUsuario',
-        builder: (context, state) => const EditarPerfil(),
-      ),
-      GoRoute(
-        path: '/perfil',
-        name: 'perfil',
-        builder: (context, state) => const Perfil(),
-      ),
 
-      // --- B. RUTAS PRINCIPALES ---
-      GoRoute(
-        path: '/home',
-        name: 'home',
-        builder: (context, state) => const HomeView(),
-      ),
-      GoRoute(
-        path: '/cursos', // 👈 NUEVA RUTA
-        name: 'cursos',
-        builder: (context, state) => const MisCursosView(), // Pantalla con el engrane
+      // --- B. SHELL CON BOTTOM NAV BAR Y ANIMACIONES ---
+      ShellRoute(
+        builder: (context, state, child) => MainNavigationShell(child: child),
+        routes: [
+          _animatedRoute(
+            path: '/home',
+            name: 'home',
+            child: const HomeView(),
+          ),
+          _animatedRoute(
+            path: '/cursos',
+            name: 'cursos',
+            child: const MisCursosView(),
+          ),
+          _animatedRoute(
+            path: '/perfil',
+            name: 'perfil',
+            child: const Perfil(),
+            subroutes: [
+              GoRoute(
+                path: 'editar',
+                name: 'editarPerfil',
+                builder: (context, state) => const EditarPerfil(),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );
 });
+
+/// 🔹 Función auxiliar para crear rutas con animación de transición
+GoRoute _animatedRoute({
+  required String path,
+  required String name,
+  required Widget child,
+  List<GoRoute> subroutes = const [],
+}) {
+  return GoRoute(
+    path: path,
+    name: name,
+    pageBuilder: (context, state) => CustomTransitionPage(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // 👇 Animación combinada: fade + slide
+        const beginOffset = Offset(0.1, 0);
+        const endOffset = Offset.zero;
+        final tween = Tween(begin: beginOffset, end: endOffset)
+            .chain(CurveTween(curve: Curves.easeInOut));
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          ),
+        );
+      },
+    ),
+    routes: subroutes,
+  );
+}
