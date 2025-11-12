@@ -6,8 +6,9 @@ publish_to: 'none' # Impide que se publique accidentalmente
 
 version: 1.0.0+1
 
+# CORRECCIÓN DE ERROR: Establece el límite inferior del SDK en la versión 3.9.0
 environment:
-  sdk: '>=3.0.0 <4.0.0' # Actualizado para ser más flexible
+  sdk: '^3.9.0' # Esto significa >=3.9.0 y <4.0.0
 
 #
 # --- DEPENDENCIAS DE LA APP ---
@@ -15,33 +16,32 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  #-- FUNCION PARA EL CÓDIGO DE VERIFICACION--
-  http: ^0.13.6
-  pinput: ^4.0.0
 
-
-
+  #-- FUNCION PARA EL CÓDIGO DE VERIFICACION (Actualizados a versiones estables) --
+  http: ^1.6.0
+  pinput: ^5.0.2
 
   # --- A) NUESTRAS ADICIONES (El "Core" de la app) ---
 
-  # 1. State Management (Nuestra elección)
+  # 1. State Management (Versión estable de la Serie 2.x)
   flutter_riverpod: ^2.5.1
 
-  # 2. Navegación (El estándar moderno)
+  # 2. Navegación (Versión estable de la Serie 14.x)
   go_router: ^14.1.0
 
-  # 3. Firebase (Backend para usuarios y videos)
-  firebase_core: any
-  firebase_auth: any
-  cloud_firestore: any
+  # 3. Firebase (CORREGIDO a versiones estables y compatibles)
+  # Necesitas la versión 2.x.x de Core para la serie 4.x.x de Auth/Firestore
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.5
 
-  # 4. Login con Google (Tu diseño lo incluye)
-  google_sign_in: ^6.3.0
+  # 4. Login con Google (Compatible con la serie 4 de Firebase Auth)
+  google_sign_in: ^6.1.6
 
-  # 5. Botón de Google (¡AÑADIDO CORRECTAMENTE!)
+  # 5. Botón de Google (Se mantiene la última versión)
   flutter_signin_button: ^2.0.0
 
-  # --- B) DEPENDENCIAS POR DEFECTO ---
+  # --- B) DEPENDENCIAS POR DEFECTO (Se mantienen) ---
   cupertino_icons: ^1.0.8
   equatable: ^2.0.7
 
@@ -52,8 +52,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # Lints para mantener el código limpio
-  flutter_lints: ^4.0.0 # (Actualizado a una versión más reciente)
+  # Lints para mantener el código limpio (Versión estable)
+  flutter_lints: ^3.0.1 # Se sugiere usar la serie 3.x.x que es compatible con Dart 3
 
 
 #
@@ -63,21 +63,12 @@ flutter:
   uses-material-design: true
 
   # --- C) TUS ASSETS (Imágenes) ---
-  # ¡SECCIÓN DESCOMENTADA!
-  # Ahora Flutter encontrará tus imágenes en esta carpeta.
   assets:
     - assets/images/
-    # No necesitas listar cada imagen si pones la diagonal al final
-    # - assets/images/logo.png
-
 
   # --- D) TUS FUENTES (Tipografía) ---
-  # Si tu diseño de Figma usa una fuente personalizada
-  # (que no sea la fuente por defecto del sistema),
-  # aquí es donde la registrarías.
+  # Si usas fuentes personalizadas, descomenta y configura esta sección:
   # fonts:
   #   - family: TuFuentePersonalizada
   #     fonts:
   #       - asset: assets/fonts/TuFuente-Regular.ttf
-  #       - asset: assets/fonts/TuFuente-Bold.ttf
-  #         weight: 700
