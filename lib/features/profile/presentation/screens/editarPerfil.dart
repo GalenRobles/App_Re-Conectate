@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/services/FirestoreService.dart';
 
-
 class EditarPerfil extends StatefulWidget {
   const EditarPerfil({super.key});
 
@@ -16,7 +15,6 @@ class _EditarPerfilState extends State<EditarPerfil> {
 
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
   bool isLoading = true;
 
   @override
@@ -32,7 +30,6 @@ class _EditarPerfilState extends State<EditarPerfil> {
       if (data != null) {
         nameController.text = data['nombre'] ?? '';
         lastNameController.text = data['apellido'] ?? '';
-        emailController.text = data['email'] ?? '';
       }
     }
     setState(() => isLoading = false);
@@ -47,11 +44,8 @@ class _EditarPerfilState extends State<EditarPerfil> {
       {
         'nombre': nameController.text.trim(),
         'apellido': lastNameController.text.trim(),
-        'email': emailController.text.trim(),
       },
     );
-
-
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Perfil actualizado correctamente')),
@@ -85,22 +79,15 @@ class _EditarPerfilState extends State<EditarPerfil> {
                   color: Colors.black54,
                 ),
               ),
-
               const SizedBox(height: 24),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
                     _TextField(controller: nameController, hint: 'Nombre'),
                     const SizedBox(height: 12),
-                    _TextField(
-                        controller: lastNameController, hint: 'Apellido'),
-                    const SizedBox(height: 12),
-                    _TextField(
-                        controller: emailController,
-                        hint: 'Correo electrónico'),
-                    const SizedBox(height: 28),
+                    _TextField(controller: lastNameController, hint: 'Apellido'),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
@@ -160,4 +147,5 @@ class _TextField extends StatelessWidget {
     );
   }
 }
+
 

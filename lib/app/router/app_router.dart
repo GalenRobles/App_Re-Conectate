@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// 1. IMPORTA LAS PANTALLAS CORRECTAS
+// 1. Importa el "Shell" o contenedor principal (si ya lo tienes)
+import 'package:reconectate/app/shell/main_navigation_shell.dart';
+
+// 2. Importa las pantallas necesarias
 import 'package:reconectate/features/auth/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/presentation/screens/login_screen.dart';
-// ¡ESTA ES LA IMPORTACIÓN CORRECTA PARA EL REGISTRO!
 import 'package:reconectate/features/auth/presentation/screens/register_screen.dart';
 import 'package:reconectate/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
@@ -14,16 +16,13 @@ import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 import 'package:reconectate/navigation/auth_gate.dart';
 import 'package:reconectate/features/home_courses/presentation/screens/home.dart';
 import 'package:reconectate/features/auth/presentation/screens/forgot_password_screen.dart';
-
+import 'package:reconectate/features/home_courses/presentation/screens/Cursos.dart';
 
 // 3. El Provider de Riverpod que "provee" el router a la app
 final appRouterProvider = Provider<GoRouter>((ref) {
-
   return GoRouter(
-    initialLocation: '/', // La ruta inicial de la app
-    debugLogDiagnostics: true, // Muestra logs en la consola, útil para depurar
-
-    // --- RUTAS DE LA APP ---
+    initialLocation: '/', // Ruta inicial
+    debugLogDiagnostics: true,
     routes: [
 
       // --- A. Rutas de Autenticación (Sin barra de navegación) ---
@@ -51,30 +50,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           // Obtenemos el email pasado desde el registro (debe ser un String)
           final email = state.extra as String?;
-
-          // 🚨 CORRECCIÓN 2: Usamos OtpVerificationScreen (la clase existente)
-          // Si el email es nulo, volvemos a registro.
-          if (email == null) {
-            return const RegisterScreen();
-          }
-
-          // Si el email existe, lo pasamos al constructor
+          if (email == null) return const RegisterScreen();
           return OtpVerificationScreen(email: email);
         },
       ),
-      GoRoute(path: '/editarPerfil',
+      GoRoute(
+        path: '/editarPerfil',
         name: 'ActualizarUsuario',
         builder: (context,state) => const EditarPerfil(),
       ),
       GoRoute(path: '/perfil',
         name: 'perfil',
-        builder: (context,state)=> const Perfil(),
+        builder: (context, state) => const Perfil(),
       ),
 
       GoRoute(
         path: '/home',
         name: 'home',
         builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: '/cursos', // 👈 NUEVA RUTA
+        name: 'cursos',
+        builder: (context, state) => const MisCursosView(), // Pantalla con el engrane
       ),
     ],
   );

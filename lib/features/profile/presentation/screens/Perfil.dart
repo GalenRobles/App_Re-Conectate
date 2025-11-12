@@ -184,7 +184,7 @@ class _PerfilState extends State<Perfil> {
                   if (!mounted) return;
 
                   // 🔹 Redirige limpiamente al Login (sin poder volver atrás)
-                  context.go('/');
+                  context.go('/login');
                 },
                 child: const Text(
                   'Cerrar Sesión',
@@ -196,19 +196,32 @@ class _PerfilState extends State<Perfil> {
             const SizedBox(height: 24),
 
             // Barra inferior
+            // 🔹 Barra inferior actualizada con navegación real
             Container(
               height: 60,
               color: AppColors.white,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _NavIcon(icon: Icons.home, label: 'Inicio'),
-                  _NavIcon(icon: Icons.menu_book, label: 'Mis cursos'),
-                  _NavIcon(
-                      icon: Icons.person, label: 'Perfil', active: true),
+                  IconButton(
+                    icon: const Icon(Icons.home),
+                    color: AppColors.textSecondary,
+                    onPressed: () => context.go('/home'),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.menu_book),
+                    color: AppColors.textSecondary,
+                    onPressed: () => context.go('/cursos'),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.person),
+                    color: AppColors.primaryRed,
+                    onPressed: () => context.go('/perfil'),
+                  ),
                 ],
               ),
             )
+
           ],
         ),
       ),

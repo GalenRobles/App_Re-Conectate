@@ -237,8 +237,9 @@ class HomeView extends ConsumerWidget {
             selectedItemColor: AppColors.primaryRed,
             unselectedItemColor: AppColors.textSecondary,
             onTap: (index) {
-              if (index == 0) context.go('/home');
-              if (index == 2) context.go('/perfil');
+              if (index == 0) context.go('/home');    // 🔹 Inicio
+              if (index == 1) context.go('/cursos');  // 🔹 Mis Cursos
+              if (index == 2) context.go('/perfil');  // 🔹 Perfil
             },
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
@@ -246,6 +247,7 @@ class HomeView extends ConsumerWidget {
               BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
             ],
           ),
+
         );
       },
     );
