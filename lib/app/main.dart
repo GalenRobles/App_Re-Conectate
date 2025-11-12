@@ -7,6 +7,8 @@ import 'app_widget.dart';
 // import 'firebase_options.dart';
 
 void main() async {
+
+
   // 3. Asegura que todos los 'bindings' de Flutter estén listos
   // Necesario antes de llamar a Firebase.initializeApp
   WidgetsFlutterBinding.ensureInitialized();

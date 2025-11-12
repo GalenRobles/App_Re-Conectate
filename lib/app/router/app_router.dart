@@ -20,6 +20,7 @@ import 'package:reconectate/features/home_courses/presentation/screens/Cursos.da
 
 // 3. El Provider de Riverpod que "provee" el router a la app
 final appRouterProvider = Provider<GoRouter>((ref) {
+
   return GoRouter(
     initialLocation: '/', // Ruta inicial
     debugLogDiagnostics: true,
@@ -54,8 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return OtpVerificationScreen(email: email);
         },
       ),
-      GoRoute(
-        path: '/editarPerfil',
+      GoRoute(path: '/editarPerfil',
         name: 'ActualizarUsuario',
         builder: (context,state) => const EditarPerfil(),
       ),

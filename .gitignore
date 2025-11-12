@@ -57,3 +57,18 @@ app.*.map.json
 
 # Credenciales de Gradle (Contiene rutas a Keystores, etc.)
 /android/key.properties
+
+# Archivos de Flutter/Dart/IDE comunes
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+.vscode/
+build/
+*.iml
+pubspec.lock
+
+# IGNORAR ARCHIVOS DE SECRETS Y VARIABLES DE ENTORNO
+# Aquí va el archivo que contendrá tu clave API de SendGrid
+.env

@@ -6,7 +6,6 @@ publish_to: 'none' # Impide que se publique accidentalmente
 
 version: 1.0.0+1
 
-# CORRECCIÓN DE ERROR: Establece el límite inferior del SDK en la versión 3.9.0
 environment:
   sdk: '^3.9.0' # Esto significa >=3.9.0 y <4.0.0
 
@@ -44,6 +43,7 @@ dependencies:
   # --- B) DEPENDENCIAS POR DEFECTO (Se mantienen) ---
   cupertino_icons: ^1.0.8
   equatable: ^2.0.7
+  flutter_launcher_icons: ^0.14.4
 
 #
 # --- DEPENDENCIAS DE DESARROLLO ---
@@ -63,12 +63,26 @@ flutter:
   uses-material-design: true
 
   # --- C) TUS ASSETS (Imágenes) ---
+  # ¡SECCIÓN DESCOMENTADA!
+  # Ahora Flutter encontrará tus imágenes en esta carpeta.
   assets:
     - assets/images/
+    # No necesitas listar cada imagen si pones la diagonal al final
+    # - assets/images/logo.png
+
 
   # --- D) TUS FUENTES (Tipografía) ---
-  # Si usas fuentes personalizadas, descomenta y configura esta sección:
+  # Si tu diseño de Figma usa una fuente personalizada
+  # (que no sea la fuente por defecto del sistema),
+  # aquí es donde la registrarías.
   # fonts:
   #   - family: TuFuentePersonalizada
   #     fonts:
   #       - asset: assets/fonts/TuFuente-Regular.ttf
+  #       - asset: assets/fonts/TuFuente-Bold.ttf
+  #         weight: 700
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
