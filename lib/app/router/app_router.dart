@@ -8,19 +8,17 @@ import 'package:reconectate/app/shell/main_navigation_shell.dart';
 // 2. Importa las pantallas necesarias
 import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
-// ¡ESTA ES LA IMPORTACIÓN CORRECTA PARA EL REGISTRO!
 import 'package:reconectate/features/auth/data/domain/presentation/screens/register_screen.dart';
-import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 
-// (Si tienes estas pantallas, asegúrate de importarlas)
+// Pantallas principales
 import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
+import 'package:reconectate/features/profile/presentation/screens/Cursos.dart'; //
 
-// ¡IMPORTA EL AUTHGATE Y EL HOME!
+// AuthGate y otras
 import 'package:reconectate/navigation/auth_gate.dart';
-import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
 import 'package:reconectate/features/auth/data/domain/presentation/screens/forgot_password_screen.dart';
 
 void main() {
@@ -46,68 +44,56 @@ class MyApp extends ConsumerWidget {
 
 // --- Router de la app (Riverpod Provider) ---
 final appRouterProvider = Provider<GoRouter>((ref) {
-
   return GoRouter(
     initialLocation: '/', // Ruta inicial
-    debugLogDiagnostics: true, // Muestra logs útiles en la consola
+    debugLogDiagnostics: true,
     routes: [
-
       // --- A. RUTAS DE AUTENTICACIÓN ---
       GoRoute(
         path: '/',
         name: 'splash',
-        // ¡CORRECCIÓN DE ARQUITECTURA!
-        // La Splash screen no debe ir a /login, debe ir al AuthGate.
-        // El AuthGate decidirá si va a Home o Login.
         builder: (context, state) => const AuthGate(),
-      ),
-      GoRoute(
-        path: '/login',
-        name: 'login',
-        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/forgotPassword',
         name: 'Recuperar_contra',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-
       GoRoute(
         path: '/registre',
         name: 'Crear_cuenta',
         builder: (context, state) => const RegisterScreen(),
-
       ),
       GoRoute(
         path: '/verific',
         name: 'Codigo_ver',
         builder: (context, state) {
-          // Obtenemos el email pasado desde el registro (debe ser un String)
           final email = state.extra as String?;
-
-          // 🚨 CORRECCIÓN 2: Usamos OtpVerificationScreen (la clase existente)
-          // Si el email es nulo, volvemos a registro.
-          if (email == null) {
-            return const RegistrationScreen();
-          }
-
-          // Si el email existe, lo pasamos al constructor
+          if (email == null) return const RegisterScreen();
           return OtpVerificationScreen(email: email);
         },
       ),
-      GoRoute(path: '/editarPerfil',
+      GoRoute(
+        path: '/editarPerfil',
         name: 'ActualizarUsuario',
-        builder: (context,state) => const EditarPerfil(),
+        builder: (context, state) => const EditarPerfil(),
       ),
-      GoRoute(path: '/perfil',
+      GoRoute(
+        path: '/perfil',
         name: 'perfil',
-        builder: (context,state)=> const Perfil(),
+        builder: (context, state) => const Perfil(),
       ),
 
+      // --- B. RUTAS PRINCIPALES ---
       GoRoute(
         path: '/home',
         name: 'home',
         builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: '/cursos', // 👈 NUEVA RUTA
+        name: 'cursos',
+        builder: (context, state) => const MisCursosView(), // Pantalla con el engrane
       ),
     ],
   );
