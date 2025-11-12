@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 // 1. IMPORTA LAS PANTALLAS CORRECTAS
-import 'package:reconectate/features/auth/data/domain/presentation/screens/splash_screen.dart';
-import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
+import 'package:reconectate/features/auth/presentation/screens/splash_screen.dart';
+import 'package:reconectate/features/auth/presentation/screens/login_screen.dart';
 // ¡ESTA ES LA IMPORTACIÓN CORRECTA PARA EL REGISTRO!
-import 'package:reconectate/features/auth/data/domain/presentation/screens/register_screen.dart';
-import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
+import 'package:reconectate/features/auth/presentation/screens/register_screen.dart';
+import 'package:reconectate/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
 // ¡IMPORTA EL AUTHGATE Y EL HOME!
 import 'package:reconectate/navigation/auth_gate.dart';
-import 'package:reconectate/features/home_courses/data/domain/presentation/screens/home.dart';
-import 'package:reconectate/features/auth/data/domain/presentation/screens/forgot_password_screen.dart';
+import 'package:reconectate/features/home_courses/presentation/screens/home.dart';
+import 'package:reconectate/features/auth/presentation/screens/forgot_password_screen.dart';
 
 
 // 3. El Provider de Riverpod que "provee" el router a la app
