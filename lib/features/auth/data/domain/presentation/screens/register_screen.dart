@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reconectate/core/widgets/custom_button.dart';
 import 'package:reconectate/core/widgets/custom_text_field.dart';
+import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
 
 // Importa los servicios clave
 import 'package:reconectate/providers/auth_login_notifier.dart';
@@ -26,7 +27,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
 
   final EmailService _emailService = EmailService(); // <--- 2. INICIALIZADO
-  //final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -64,6 +64,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     try {
       print('DEBUG-1: Iniciando autenticación...');
 
+      // 1. Crear usuario en Firebase Auth
       final userCredential = await authNotifier.signUpWithEmail(
         email: email,
         password: password,
@@ -71,6 +72,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       print('DEBUG-2: Autenticación EXITOSA! UID: ${userCredential.user!.uid}');
 
+      // 2. Crear perfil en Firestore
       await firestoreService.createUserProfile(
         userId: userCredential.user!.uid,
         email: email,
@@ -80,11 +82,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       print('DEBUG-3: Escritura en Firestore EXITOSA!');
 
-      // ----------------------------------------------------
-      // PASO CRUCIAL AÑADIDO: ENVIAR EL CORREO OTP
-      // ----------------------------------------------------
+      // 3. Enviar el correo OTP
       print('DEBUG-3.5: Iniciando envío de correo OTP...');
-      final bool emailSent = await _emailService.sendOtpEmail(email);
+      // Usamos el argumento 'name' en el servicio para que la función tenga más datos
+      final bool emailSent = await _emailService.sendOtpEmail(
+        email: email,
+        name: nombre, // Pasamos el nombre para que la Cloud Function lo use en el email
+      );
 
       if (emailSent) {
         print('DEBUG-4: Correo enviado. Navegando a verificación.');
@@ -92,28 +96,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         // Limpiar el Snackbar antes de navegar
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-        // Paso 4: Navegar si el envío de correo fue exitoso
+        // 🚨 NAVEGACIÓN CORREGIDA: SOLO UNA LLAMADA Y DENTRO DEL BLOQUE 'emailSent'
         WidgetsBinding.instance.addPostFrameCallback((_) {
           context.go('/verific', extra: email);
         });
 
       } else {
-        // El correo falló (error de EmailJS, credenciales, etc.)
+        // El correo falló (Error en Cloud Function, Nodemailer, etc.)
         print('DEBUG-4: FALLO en el envío del correo OTP. Revisa la consola.');
 
         // Muestra un error al usuario y NO navega
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error al enviar el código de verificación. Revisa la configuración del servidor de correo.'), backgroundColor: Colors.red)
+            const SnackBar(content: Text('Error al enviar el código de verificación. Puede que la cuenta se haya creado sin verificar.'), backgroundColor: Colors.red)
         );
-
-        // Opcional: Podrías considerar eliminar el usuario recién creado si el envío de OTP es crítico.
-        // await userCredential.user?.delete();
       }
 
-      // ÉXITO: Navegación ocurre vía AuthGate
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/verific');
-      });
+      // 🚨 IMPORTANTE: SE ELIMINÓ LA LLAMADA DUPLICADA A context.go('/verific') que no pasaba el 'extra'
 
     } on FirebaseAuthException catch (e) {
       String message = 'Error de Autenticación.';

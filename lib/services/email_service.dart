@@ -30,7 +30,9 @@ class EmailService {
   }
 
   // --- 1. FUNCIÓN DE ENVÍO Y GUARDADO (Con SendGrid) ---
-  Future<bool> sendOtpEmail(String recipientEmail) async {
+  // 🚨 CORRECCIÓN CLAVE: Acepta 'email' como parámetro con nombre y obligatorio.
+  Future<bool> sendOtpEmail({required String email, required String name}) async {
+    final recipientEmail = email; // Usamos el nombre 'recipientEmail' internamente para claridad
     final otpCode = _generateOtp();
     final expiresAt = DateTime.now().add(const Duration(minutes: 15));
     final expiresTime = expiresAt.toLocal().toString().substring(11, 16); // HH:MM

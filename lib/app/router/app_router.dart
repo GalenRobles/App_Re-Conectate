@@ -7,7 +7,7 @@ import 'package:reconectate/features/auth/data/domain/presentation/screens/splas
 import 'package:reconectate/features/auth/data/domain/presentation/screens/login_screen.dart';
 // ¡ESTA ES LA IMPORTACIÓN CORRECTA PARA EL REGISTRO!
 import 'package:reconectate/features/auth/data/domain/presentation/screens/register_screen.dart';
-//import 'package:reconectate/features/profile/presentation/screens/Crear_cuenta.dart';
+// 🚨 MANTENEMOS ESTA IMPORTACIÓN, DEBE SER EL ORIGEN DE LA CLASE OtpVerificationScreen
 import 'package:reconectate/features/auth/data/domain/presentation/screens/otp_verification_screen.dart';
 import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
 import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
@@ -51,21 +51,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/registre',
         name: 'Crear_cuenta',
+        // Usamos RegisterScreen
         builder: (context, state) => const RegisterScreen(),
 
       ),
       GoRoute(
-        path: '/verific', // El path que usas en register_screen.dart
+        path: '/verific',
+        name: 'Codigo_ver',
         builder: (context, state) {
-          // Recupera el parámetro 'extra' (el email) que pasaste desde RegisterScreen
-          final String? email = state.extra as String?;
+          // Obtenemos el email pasado desde el registro (debe ser un String)
+          final email = state.extra as String?;
 
-          // Es crucial pasar el email para que la pantalla de verificación sepa
-          // a qué usuario se le debe verificar el código.
+          // 🚨 DEBUG: Imprime el valor de state.extra para ver por qué es nulo.
+          print('DEBUG GO_ROUTER: Navegando a /verific. state.extra (email): $email');
+
+          // 🚨 Si el email es nulo, volvemos a registro.
           if (email == null) {
-            // Si por alguna razón el email no se pasó, redirige a la pantalla de login
-            return const LoginScreen();
+            // Esto sucede si se accede a la ruta directamente sin el parámetro 'extra'.
+            return const  RegisterScreen();
           }
+
+          // 🚨 RETORNA LA CLASE OtpVerificationScreen.
           return OtpVerificationScreen(email: email);
         },
       ),
