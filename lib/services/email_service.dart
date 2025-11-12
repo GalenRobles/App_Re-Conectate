@@ -12,7 +12,9 @@ class EmailService {
   // Obtén tu API Key de SendGrid (empieza por 'SG.').
   // ADVERTENCIA: Esta clave API está expuesta en el código fuente de tu app.
   // Es mejor usar una cuenta con permisos restringidos (Custom Access -> Mail Send).
-  static const String _sendGridApiKey = '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';
+  static const String _sendGridApiKey = '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';
+
+
 
   // Reemplaza con el email verificado que usas en SendGrid (ej: no-reply@tuapp.com)
   static const String _senderEmail = 'aplicacionreconectate@gmail.com';
