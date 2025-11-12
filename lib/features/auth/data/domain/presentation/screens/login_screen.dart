@@ -52,15 +52,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       String message = 'Error de Login.';
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         message = 'Correo o contraseña incorrectos.';
-      } else {
-        message = 'Error de Firebase: ${e.message}';
+      }
+      else if(e.code=='invalid-email') {
+        message = 'El formato del correo es invalido';
+      }
+      else if(e.code=='user-disabled'){
+        message ='Esta cuenta ha sido deshabilitada. Contacta al soporte.';
+      }
+      else if(e.code=='too-many-requests'){
+        message='Demasiados intentos';
+      }
+      else{
+        message='Ocurrió un error desconocido durante el inicio de sesión. Intenta de nuevo.';
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
+          SnackBar(content: Text(message)),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error inesperado: $e')),
+        SnackBar(content: Text('Ocurrio un error inesperado, Revisa tu conexion a internet')),
       );
     }
   }
