@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:reconectate/services/FirestoreService.dart';
+import 'package:app/services/FirestoreService.dart';
 
 class EditarPerfil extends StatefulWidget {
   const EditarPerfil({super.key});

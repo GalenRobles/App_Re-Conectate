@@ -72,3 +72,4 @@ pubspec.lock
 # IGNORAR ARCHIVOS DE SECRETS Y VARIABLES DE ENTORNO
 # Aquí va el archivo que contendrá tu clave API de SendGrid
 .env
+/android/key.properties

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // NECESARIO para FirebaseAuthException
-import 'package:reconectate/core/widgets/custom_button.dart';
-import 'package:reconectate/core/widgets/custom_text_field.dart';
+import 'package:app/core/widgets/custom_button.dart';
+import 'package:app/core/widgets/custom_text_field.dart';
 
 // Importa tus providers centrales
-import 'package:reconectate/providers/auth_providers.dart';
-import 'package:reconectate/providers/auth_login_notifier.dart';
+import 'package:app/providers/auth_providers.dart';
+import 'package:app/providers/auth_login_notifier.dart';
 
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {

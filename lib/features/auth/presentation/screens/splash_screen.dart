@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart'; // Para navegar a la siguiente pantalla
-import 'package:reconectate/app/theme/app_colors.dart';
+import 'package:app/app/theme/app_colors.dart';
 
 
 class SplashScreen extends ConsumerStatefulWidget {

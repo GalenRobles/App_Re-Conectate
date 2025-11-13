@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reconectate/app/router/app_router.dart';
+import 'package:app/app/router/app_router.dart';
 
 // 1. IMPORTA TU NUEVO ARCHIVO DE TEMA
-import 'package:reconectate/app/theme/app_theme.dart';
+import 'package:app/app/theme/app_theme.dart';
 
 class AppWidget extends ConsumerWidget {
   const AppWidget({super.key});

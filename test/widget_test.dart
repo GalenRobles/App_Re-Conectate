@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reconectate/app/theme/app_colors.dart';
-import 'package:reconectate/providers/auth_providers.dart';
+import 'package:app/app/theme/app_colors.dart';
+import 'package:app/providers/auth_providers.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});

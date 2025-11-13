@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:reconectate/managers/AuthStateManager.dart'; //
+import 'package:app/managers/AuthStateManager.dart'; //
 import 'auth_login_notifier.dart'; //
-import 'package:reconectate/services/FirestoreService.dart'; //
+import 'package:app/services/FirestoreService.dart'; //
 
 // ----------------------------------------------------------------------
 // 1. PROVIDERS BÁSICOS (Manejo de la Sesión y Logout)

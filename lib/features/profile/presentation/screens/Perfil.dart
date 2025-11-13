@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart'; // ✅ necesario para redirección limpia
-import 'package:reconectate/app/theme/app_colors.dart';
-import 'package:reconectate/services/FirestoreService.dart';
+import 'package:app/app/theme/app_colors.dart';
+import 'package:app/services/FirestoreService.dart';
 import 'editarPerfil.dart';
 
 class Perfil extends StatefulWidget {

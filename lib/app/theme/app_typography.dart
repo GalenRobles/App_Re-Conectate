@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reconectate/app/theme/app_colors.dart'; // Importamos nuestros colores
+import 'package:app/app/theme/app_colors.dart'; // Importamos nuestros colores
 
 /// Define los estilos de texto (tipografía) de la app.
 class AppTypography {

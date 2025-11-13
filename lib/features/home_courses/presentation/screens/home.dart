@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reconectate/app/theme/app_colors.dart';
+import 'package:app/app/theme/app_colors.dart';
 // ¡CRÍTICO! Importa el provider que tiene el profileStreamProvider
-import 'package:reconectate/providers/auth_providers.dart';
+import 'package:app/providers/auth_providers.dart';
 
 // Definimos el color exacto para el degradado
 final Color _yellowGold = const Color(0xFFF6C555);

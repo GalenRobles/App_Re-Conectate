@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // Asegúrate de importar el servicio para poder usar el método de verificación
-import 'package:reconectate/services/email_service.dart';
+import 'package:app/services/email_service.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   // El email es obligatorio para saber qué OTP buscar en Firestore
@@ -51,7 +51,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         // 2. ÉXITO: El código es correcto y no ha expirado.
         if (mounted) {
           // Si el código es correcto, navega a la pantalla de Home
-          // Nota: Aquí deberías terminar el proceso de registro, por ejemplo, creando el usuario en Firebase Auth.
+          // Nota: Aquí deberías terminar el proceso de registro, por app, creando el usuario en Firebase Auth.
           context.go('/home');
           _showSnackbar('¡Verificación exitosa! Bienvenido/a.', Colors.green);
         }

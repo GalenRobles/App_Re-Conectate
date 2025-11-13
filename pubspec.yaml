@@ -1,5 +1,5 @@
 # 1. CORRECCIÓN: 'name' no lleva dos puntos al inicio.
-name: reconectate # (O el nombre de tu proyecto, sin espacios)
+name: app # (O el nombre de tu proyecto, sin espacios)
 description: "Una app para Re-Conectarte con tu eneagrama."
 
 publish_to: 'none' # Impide que se publique accidentalmente
@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.15.3
   cloud_firestore: ^4.13.5
+  firebase_app_check: ^0.2.1+10
 
   # 4. Login con Google (Compatible con la serie 4 de Firebase Auth)
   google_sign_in: ^6.1.6

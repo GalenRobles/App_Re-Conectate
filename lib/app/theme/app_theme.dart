@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reconectate/app/theme/app_colors.dart';
-import 'package:reconectate/app/theme/app_typography.dart';
+import 'package:app/app/theme/app_colors.dart';
+import 'package:app/app/theme/app_typography.dart';
 
 /// Define el tema principal de la aplicación.
 class AppTheme {

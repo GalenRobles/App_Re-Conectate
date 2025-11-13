@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // NECESARIO para manejar la excepción
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:reconectate/core/widgets/custom_button.dart'; //
-import 'package:reconectate/core/widgets/custom_text_field.dart'; //
+import 'package:app/core/widgets/custom_button.dart'; //
+import 'package:app/core/widgets/custom_text_field.dart'; //
 
 // Importa los servicios clave (AuthNotifier y Providers)
-import 'package:reconectate/providers/auth_login_notifier.dart'; //
-import 'package:reconectate/providers/auth_providers.dart'; //
+import 'package:app/providers/auth_login_notifier.dart'; //
+import 'package:app/providers/auth_providers.dart'; //
 
 
 class LoginScreen extends ConsumerStatefulWidget {

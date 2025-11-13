@@ -3,20 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 // 1. Importa el "Shell" o contenedor principal (si ya lo tienes)
-import 'package:reconectate/app/shell/main_navigation_shell.dart';
+import 'package:app/app/shell/main_navigation_shell.dart';
 
 // 2. Importa las pantallas necesarias
-import 'package:reconectate/features/auth/presentation/screens/splash_screen.dart';
-import 'package:reconectate/features/auth/presentation/screens/login_screen.dart';
-import 'package:reconectate/features/auth/presentation/screens/register_screen.dart';
-import 'package:reconectate/features/auth/presentation/screens/otp_verification_screen.dart';
-import 'package:reconectate/features/profile/presentation/screens/editarPerfil.dart';
-import 'package:reconectate/features/profile/presentation/screens/Perfil.dart';
+import 'package:app/features/auth/presentation/screens/splash_screen.dart';
+import 'package:app/features/auth/presentation/screens/login_screen.dart';
+import 'package:app/features/auth/presentation/screens/register_screen.dart';
+import 'package:app/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:app/features/profile/presentation/screens/editarPerfil.dart';
+import 'package:app/features/profile/presentation/screens/Perfil.dart';
 // ¡IMPORTA EL AUTHGATE Y EL HOME!
-import 'package:reconectate/navigation/auth_gate.dart';
-import 'package:reconectate/features/home_courses/presentation/screens/home.dart';
-import 'package:reconectate/features/auth/presentation/screens/forgot_password_screen.dart';
-import 'package:reconectate/features/home_courses/presentation/screens/Cursos.dart';
+import 'package:app/navigation/auth_gate.dart';
+import 'package:app/features/home_courses/presentation/screens/home.dart';
+import 'package:app/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:app/features/home_courses/presentation/screens/Cursos.dart';
 
 // 3. El Provider de Riverpod que "provee" el router a la app
 final appRouterProvider = Provider<GoRouter>((ref) {

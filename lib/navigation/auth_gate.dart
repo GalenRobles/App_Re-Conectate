@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reconectate/features/home_courses/presentation/screens/home.dart';
-import 'package:reconectate/features/auth/presentation/screens/login_screen.dart';
+import 'package:app/features/home_courses/presentation/screens/home.dart';
+import 'package:app/features/auth/presentation/screens/login_screen.dart';
 import '../providers/auth_providers.dart'; // ¡Importante!
 
 class AuthGate extends ConsumerWidget {

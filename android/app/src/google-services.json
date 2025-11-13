@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:621996917537:android:0e2461a98dc3d233bb7460",
         "android_client_info": {
-          "package_name": "com.example.ejemplo"
+          "package_name": "com.reconectate.app"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "621996917537-jkkjhs7sctb9fjbfsnb2n3a1u8h5timi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ejemplo",
+            "package_name": "com.reconectate.app",
             "certificate_hash": "bf4c0817f1d45f2a32fca5dc24ba5fc2be6f10cb"
           }
         },
