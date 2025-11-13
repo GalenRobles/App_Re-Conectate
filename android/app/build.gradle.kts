@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ejemplo"
+    namespace = "com.reconectate.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -22,7 +22,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.ejemplo"
+        applicationId = "com.reconectate.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
