@@ -20,14 +20,20 @@ import 'package:app/features/home_courses/presentation/screens/Cursos.dart';
 
 // 3. El Provider de Riverpod que "provee" el router a la app
 final appRouterProvider = Provider<GoRouter>((ref) {
+
   return GoRouter(
     initialLocation: '/', // Ruta inicial
     debugLogDiagnostics: true,
     routes: [
-      // --- A. RUTAS DE AUTENTICACIÓN ---
+
+      // --- A. Rutas de Autenticación (Sin barra de navegación) ---
+
       GoRoute(
         path: '/',
         name: 'splash',
+        // ¡CORRECCIÓN DE ARQUITECTURA!
+        // La Splash screen no debe ir a /login, debe ir al AuthGate.
+        // El AuthGate decidirá si va a Home o Login.
         builder: (context, state) => const AuthGate(),
       ),
       GoRoute(
