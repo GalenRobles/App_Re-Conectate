@@ -49,6 +49,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621996917537:android:9069322dada7e61ebb7460",
+        "android_client_info": {
+          "package_name": "com.reconectate.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "621996917537-2dllksbro9b37l4n5tiaq1dmf50hhck1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reconectate.app",
+            "certificate_hash": "5f79ed98e885dbb87f98f0b36fba94674dc02fbe"
+          }
+        },
+        {
+          "client_id": "621996917537-ls36su45d2ji9l44nbnubfmghhv2u859.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaZqfvoF1NYF9016GhIBYltkaQeg6P7lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "621996917537-ls36su45d2ji9l44nbnubfmghhv2u859.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
