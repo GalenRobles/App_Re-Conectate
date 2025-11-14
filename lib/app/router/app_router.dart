@@ -20,14 +20,11 @@ import 'package:app/features/home_courses/presentation/screens/Cursos.dart';
 
 // 3. El Provider de Riverpod que "provee" el router a la app
 final appRouterProvider = Provider<GoRouter>((ref) {
-
   return GoRouter(
     initialLocation: '/', // Ruta inicial
     debugLogDiagnostics: true,
     routes: [
-
-      // --- A. Rutas de Autenticación (Sin barra de navegación) ---
-
+      // --- A. RUTAS DE AUTENTICACIÓN ---
       GoRoute(
         path: '/',
         name: 'splash',
@@ -38,42 +35,82 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'Recuperar_contra',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
-
       GoRoute(
         path: '/registre',
         name: 'Crear_cuenta',
         builder: (context, state) => const RegisterScreen(),
-
       ),
       GoRoute(
         path: '/verific',
         name: 'Codigo_ver',
         builder: (context, state) {
-          // Obtenemos el email pasado desde el registro (debe ser un String)
           final email = state.extra as String?;
           if (email == null) return const RegisterScreen();
           return OtpVerificationScreen(email: email);
         },
       ),
-      GoRoute(path: '/editarPerfil',
-        name: 'ActualizarUsuario',
-        builder: (context,state) => const EditarPerfil(),
-      ),
-      GoRoute(path: '/perfil',
-        name: 'perfil',
-        builder: (context, state) => const Perfil(),
-      ),
 
-      GoRoute(
-        path: '/home',
-        name: 'home',
-        builder: (context, state) => const HomeView(),
-      ),
-      GoRoute(
-        path: '/cursos', // 👈 NUEVA RUTA
-        name: 'cursos',
-        builder: (context, state) => const MisCursosView(), // Pantalla con el engrane
+      // --- B. SHELL CON BOTTOM NAV BAR Y ANIMACIONES ---
+      ShellRoute(
+        builder: (context, state, child) => MainNavigationShell(child: child),
+        routes: [
+          _animatedRoute(
+            path: '/home',
+            name: 'home',
+            child: const HomeView(),
+          ),
+          _animatedRoute(
+            path: '/cursos',
+            name: 'cursos',
+            child: const MisCursosView(),
+          ),
+          _animatedRoute(
+            path: '/perfil',
+            name: 'perfil',
+            child: const Perfil(),
+            subroutes: [
+              GoRoute(
+                path: 'editar',
+                name: 'editarPerfil',
+                builder: (context, state) => const EditarPerfil(),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );
 });
+
+/// 🔹 Función auxiliar para crear rutas con animación de transición
+GoRoute _animatedRoute({
+  required String path,
+  required String name,
+  required Widget child,
+  List<GoRoute> subroutes = const [],
+}) {
+  return GoRoute(
+    path: path,
+    name: name,
+    pageBuilder: (context, state) => CustomTransitionPage(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // 👇 Animación combinada: fade + slide
+        const beginOffset = Offset(0.1, 0);
+        const endOffset = Offset.zero;
+        final tween = Tween(begin: beginOffset, end: endOffset)
+            .chain(CurveTween(curve: Curves.easeInOut));
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          ),
+        );
+      },
+    ),
+    routes: subroutes,
+  );
+}
