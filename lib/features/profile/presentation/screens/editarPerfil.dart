@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app/services/FirestoreService.dart';
+import 'package:app/services/FirestoreService.dart';
+import 'package:app/features/profile/presentation/screens/validators.dart';
+import 'package:app/features/profile/presentation/screens/custom_snackbar.dart';
 
 class EditarPerfil extends StatefulWidget {
   const EditarPerfil({super.key});
@@ -13,8 +16,10 @@ class _EditarPerfilState extends State<EditarPerfil> {
   final _auth = FirebaseAuth.instance;
   final _firestoreService = FirestoreService();
 
+  final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
+
   bool isLoading = true;
 
   @override
@@ -36,6 +41,13 @@ class _EditarPerfilState extends State<EditarPerfil> {
   }
 
   Future<void> _saveChanges() async {
+    if (!_formKey.currentState!.validate()) {
+      CustomSnackBar.show(context,
+          message: 'Por favor corrige los errores antes de continuar',
+          isError: true);
+      return;
+    }
+
     final user = _auth.currentUser;
     if (user == null) return;
 
@@ -47,11 +59,10 @@ class _EditarPerfilState extends State<EditarPerfil> {
       },
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Perfil actualizado correctamente')),
-    );
+    CustomSnackBar.show(context,
+        message: 'Perfil actualizado correctamente ✅', isError: false);
 
-    Navigator.pop(context); // 🔙 Regresa al perfil
+    Navigator.pop(context);
   }
 
   @override
@@ -62,86 +73,68 @@ class _EditarPerfilState extends State<EditarPerfil> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 180,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF4DDA2),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(100),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 180,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF4DDA2),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(100),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.account_circle,
+                    size: 100,
+                    color: Colors.black54,
                   ),
                 ),
-                child: const Icon(
-                  Icons.account_circle,
-                  size: 100,
-                  color: Colors.black54,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    _TextField(controller: nameController, hint: 'Nombre'),
-                    const SizedBox(height: 12),
-                    _TextField(controller: lastNameController, hint: 'Apellido'),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 14),
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: nameController,
+                        validator: validateName,
+                        decoration:
+                        const InputDecoration(labelText: 'Nombre'),
                       ),
-                      onPressed: _saveChanges,
-                      child: const Text(
-                        'Guardar y Salir',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: lastNameController,
+                        validator: validateLastName,
+                        decoration:
+                        const InputDecoration(labelText: 'Apellido'),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 14),
+                        ),
+                        onPressed: _saveChanges,
+                        child: const Text(
+                          'Guardar y Salir',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hint;
-  final bool obscureText;
-
-  const _TextField({
-    required this.controller,
-    required this.hint,
-    this.obscureText = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
         ),
       ),
     );
