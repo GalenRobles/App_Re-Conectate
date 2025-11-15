@@ -116,9 +116,6 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
-
-      // Barra inferior reutilizable (índice 0 = Home)
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
     );
   }
 }
