@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// 1. Importa el "Shell" o contenedor principal (si ya lo tienes)
+// --- Shell principal con BottomNavigationBar ---
 import 'package:app/app/shell/main_navigation_shell.dart';
 
 // 2. Importa las pantallas necesarias
@@ -22,7 +22,7 @@ import 'package:app/features/home_courses/presentation/screens/Cursos.dart';
 final appRouterProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
-    initialLocation: '/', // Ruta inicial
+    initialLocation: '/',
     debugLogDiagnostics: true,
     routes: [
 
@@ -31,9 +31,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/',
         name: 'splash',
-        // ¡CORRECCIÓN DE ARQUITECTURA!
-        // La Splash screen no debe ir a /login, debe ir al AuthGate.
-        // El AuthGate decidirá si va a Home o Login.
         builder: (context, state) => const AuthGate(),
       ),
       GoRoute(

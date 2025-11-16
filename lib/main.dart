@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'app_widget.dart';
-
-// 1. NUEVO - Importa el paquete de App Check
 import 'package:firebase_app_check/firebase_app_check.dart';
-
-// import 'firebase_options.dart'; // (Descomenta si usas FlutterFire CLI)
-
+import 'package:flutter/foundation.dart'; // Importante para kDebugMode
+import 'package:app/app_widget.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-  // Inicializa Firebase
-  await Firebase.initializeApp(
-    // options: DefaultFirebaseOptions.currentPlatform, // (Descomenta si usas FlutterFire CLI)
-  );
+  // 🚀 ACTIVACIÓN CONDICIONAL DE APP CHECK 🚀
+  if (kDebugMode) {
+    // 1. MODO DEBUG (Pruebas Locales con 'flutter run')
+    // Usa el Proveedor de Depuración para evitar el error 403 en emuladores.
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.debug,
+    );
+  } else {
+    // 2. MODO RELEASE (Producción o builds firmados)
+    // Usa Play Integrity para la seguridad estricta.
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+    );
+  }
 
-  // 2. NUEVO - Activa App Check en modo Play Integrity (Producción)
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-  );
-
-  // Envolvemos toda la app en un 'ProviderScope'
   runApp(
     const ProviderScope(
       child: AppWidget(),
