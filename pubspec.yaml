@@ -8,6 +8,7 @@ version: 1.0.0+1
 environment:
   sdk: '^3.9.0'
 
+
 dependencies:
   flutter:
     sdk: flutter
@@ -29,6 +30,8 @@ dependencies:
   firebase_auth: ^5.4.0
   cloud_firestore: ^5.4.2
   firebase_app_check: ^0.3.0+2
+  firebase_crashlytics: ^4.0.0
+
 
   # Google login
   google_sign_in: ^6.2.1

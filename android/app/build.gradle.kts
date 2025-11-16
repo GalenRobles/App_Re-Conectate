@@ -81,3 +81,7 @@ android {
 flutter {
     source = "../.."
 }
+ //crashlist
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+

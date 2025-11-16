@@ -1,6 +1,12 @@
 import org.gradle.api.file.Directory
 import org.gradle.api.tasks.Delete
 
+
+//crashlist
+classpath 'com.google.gms:google-services:4.4.1'
+classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
+
+
 // Agregamos el bloque 'plugins' para declarar la dependencia del plugin de Google Services
 plugins {
     id("com.android.application") version "8.9.1" apply false
